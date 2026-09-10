@@ -7,6 +7,7 @@
     --paper:#FBF7F5;
     --surface:#FFFFFF;
     --surface-2:#F5EEEB;
+    --tile:#F9F2EF;
     --ink:#221B1D;
     --ink-2:#5C4E51;
     --ink-3:#8B7B7E;
@@ -30,401 +31,236 @@
   }
   @media (prefers-color-scheme: dark){
     :root:not([data-theme="light"]){
-      --paper:#171314;
-      --surface:#201A1C;
-      --surface-2:#2A2225;
-      --ink:#F2EAEC;
-      --ink-2:#C3B2B6;
-      --ink-3:#938286;
-      --line:#392E31;
-      --line-strong:#4E4044;
-      --accent:#E39BB6;
-      --accent-ink:#E39BB6;
-      --accent-soft:#3A242E;
-      --on-accent:#231016;
-      --good:#78CBA2;
-      --good-soft:#1E332A;
-      --warn:#E2AC55;
-      --warn-soft:#352A18;
-      --bad:#F0907F;
-      --bad-soft:#3A2320;
+      --paper:#171314; --surface:#201A1C; --surface-2:#2A2225; --tile:#251E20;
+      --ink:#F2EAEC; --ink-2:#C3B2B6; --ink-3:#938286;
+      --line:#392E31; --line-strong:#4E4044;
+      --accent:#E39BB6; --accent-ink:#E39BB6; --accent-soft:#3A242E; --on-accent:#231016;
+      --good:#78CBA2; --good-soft:#1E332A;
+      --warn:#E2AC55; --warn-soft:#352A18;
+      --bad:#F0907F; --bad-soft:#3A2320;
       --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
     }
   }
   :root[data-theme="dark"]{
-    --paper:#171314;
-    --surface:#201A1C;
-    --surface-2:#2A2225;
-    --ink:#F2EAEC;
-    --ink-2:#C3B2B6;
-    --ink-3:#938286;
-    --line:#392E31;
-    --line-strong:#4E4044;
-    --accent:#E39BB6;
-    --accent-ink:#E39BB6;
-    --accent-soft:#3A242E;
-      --on-accent:#231016;
-    --good:#78CBA2;
-    --good-soft:#1E332A;
-    --warn:#E2AC55;
-    --warn-soft:#352A18;
-    --bad:#F0907F;
-    --bad-soft:#3A2320;
+    --paper:#171314; --surface:#201A1C; --surface-2:#2A2225; --tile:#251E20;
+    --ink:#F2EAEC; --ink-2:#C3B2B6; --ink-3:#938286;
+    --line:#392E31; --line-strong:#4E4044;
+    --accent:#E39BB6; --accent-ink:#E39BB6; --accent-soft:#3A242E; --on-accent:#231016;
+    --good:#78CBA2; --good-soft:#1E332A;
+    --warn:#E2AC55; --warn-soft:#352A18;
+    --bad:#F0907F; --bad-soft:#3A2320;
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
   }
 
   *{box-sizing:border-box}
   body{
-    background:var(--paper);
-    color:var(--ink);
-    font-family:var(--sans);
-    font-size:15px;
-    line-height:1.65;
-    word-break:keep-all;
-    overflow-wrap:break-word;
+    background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.65;
+    word-break:keep-all; overflow-wrap:break-word;
     -webkit-font-smoothing:antialiased;
   }
   .wrap{
-    max-width:680px;
-    margin:0 auto;
-    padding-inline:20px;
-    padding-block:36px 64px;
-    display:flex;
-    flex-direction:column;
-    gap:28px;
+    max-width:680px; margin:0 auto;
+    padding-inline:20px; padding-block:36px 64px;
+    display:flex; flex-direction:column; gap:26px;
   }
 
-  /* ---------- header ---------- */
-  .eyebrow{
-    font-size:12px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--accent-ink);
-    font-weight:600;
-    margin:0;
-  }
+  /* header */
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink);font-weight:600;margin:0}
   h1{
-    font-family:var(--serif);
-    font-weight:700;
-    font-size:clamp(25px,6.2vw,38px);
-    line-height:1.3;
-    margin:8px 0 0;
-    text-wrap:balance;
-    letter-spacing:-.01em;
+    font-family:var(--serif); font-weight:700;
+    font-size:clamp(25px,6.2vw,38px); line-height:1.3;
+    margin:8px 0 0; text-wrap:balance; letter-spacing:-.01em;
   }
-  .lede{
-    margin:12px 0 0;
-    color:var(--ink-2);
-    font-size:15px;
-    max-width:34em;
-  }
+  .lede{margin:12px 0 0;color:var(--ink-2);font-size:15px;max-width:34em}
   .lede strong{color:var(--ink);font-weight:600}
+  .lede + .lede{margin-top:8px}
 
-  /* ---------- panels ---------- */
-  .panel{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:20px;
-  }
-  .panel > h2{
-    margin:0 0 4px;
-    font-size:16px;
-    font-weight:600;
-    letter-spacing:-.01em;
-  }
-  .panel > .hint{
-    margin:0 0 16px;
-    font-size:13px;
-    color:var(--ink-3);
-  }
+  /* panels */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .panel > h2{margin:0 0 4px;font-size:16px;font-weight:600;letter-spacing:-.01em}
+  .panel > .hint{margin:0 0 16px;font-size:13px;color:var(--ink-3)}
+  .panel > .hint b{color:var(--ink-2);font-weight:600}
 
-  /* ---------- inputs ---------- */
+  /* inputs */
   .fields{display:flex;flex-direction:column;gap:2px}
   .field{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-    padding:9px 0;
-    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:9px 0;border-bottom:1px solid var(--line);
   }
   .fields .field:last-child{border-bottom:0;padding-bottom:0}
-  .field label{
-    font-size:14px;
-    color:var(--ink-2);
-    flex:1 1 auto;
-    min-width:0;
-  }
-  .field .sub{display:block;font-size:11.5px;color:var(--ink-3);line-height:1.4}
-  .money{
-    display:flex;
-    align-items:baseline;
-    gap:5px;
-    flex:0 0 auto;
-  }
+  .field label{font-size:14px;color:var(--ink-2);flex:1 1 auto;min-width:0}
+  .field .sub{display:block;font-size:11.5px;color:var(--ink-3);line-height:1.45}
+  .money{display:flex;align-items:baseline;gap:5px;flex:0 0 auto}
   .money input{
-    width:6.6em;
-    text-align:right;
-    font-family:var(--mono);
-    font-variant-numeric:tabular-nums;
-    font-size:15px;
-    font-weight:500;
-    color:var(--ink);
-    background:var(--surface-2);
-    border:1px solid transparent;
-    border-radius:8px;
-    padding:6px 9px;
+    width:6.6em;text-align:right;
+    font-family:var(--mono);font-variant-numeric:tabular-nums;
+    font-size:15px;font-weight:500;color:var(--ink);
+    background:var(--surface-2);border:1px solid transparent;border-radius:8px;padding:6px 9px;
   }
+  .money input.wide{width:7.6em}
+  .money input.narrow{width:4.4em}
   .money input:hover{border-color:var(--line-strong)}
-  .money input:focus{
-    outline:none;
-    border-color:var(--accent);
-    box-shadow:0 0 0 3px var(--accent-soft);
-    background:var(--surface);
-  }
-  .money input:focus-visible{outline:none}
+  .money input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);background:var(--surface)}
   .money .unit{font-size:12.5px;color:var(--ink-3);flex:0 0 auto}
 
-  /* ---------- receipt ---------- */
-  .receipt{
-    background:var(--surface-2);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:18px 20px;
-    display:flex;
-    flex-direction:column;
-    gap:1px;
+  /* checkbox */
+  .check{display:flex;align-items:flex-start;gap:9px;padding:10px 0 2px;cursor:pointer}
+  .check input{
+    appearance:none;-webkit-appearance:none;
+    width:18px;height:18px;flex:0 0 auto;margin-top:2px;
+    border:1.5px solid var(--line-strong);border-radius:5px;background:var(--surface);cursor:pointer;
   }
-  .rrow{
-    display:flex;
-    align-items:baseline;
-    gap:8px;
-    padding:6px 0;
-    font-size:14px;
+  .check input:checked{background:var(--accent);border-color:var(--accent)}
+  .check input:checked::after{
+    content:"";display:block;
+    width:5px;height:9px;margin:1px auto 0;
+    border:solid var(--on-accent);border-width:0 2px 2px 0;transform:rotate(45deg);
   }
+  .check input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .check span{font-size:13.5px;color:var(--ink-2);line-height:1.5}
+  .check span b{color:var(--ink);font-weight:600}
+
+  /* slider */
+  .slider{padding:12px 0;border-bottom:1px solid var(--line)}
+  .slider:last-child{border-bottom:0;padding-bottom:2px}
+  .slider-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+  .slider-top label{font-size:14px;color:var(--ink-2)}
+  .slider-val{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;color:var(--accent-ink);flex:0 0 auto}
+  .slider .sub{display:block;font-size:11.5px;color:var(--ink-3);line-height:1.45;margin-top:2px}
+  input[type=range]{
+    appearance:none;-webkit-appearance:none;
+    width:100%;height:22px;background:transparent;margin-top:8px;cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-runnable-track{height:6px;background:var(--surface-2);border-radius:999px}
+  input[type=range]::-moz-range-track{height:6px;background:var(--surface-2);border-radius:999px}
+  input[type=range]::-webkit-slider-thumb{
+    appearance:none;-webkit-appearance:none;
+    width:20px;height:20px;margin-top:-7px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.25);
+  }
+  input[type=range]::-moz-range-thumb{
+    width:20px;height:20px;border-radius:50%;
+    background:var(--accent);border:3px solid var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.25);
+  }
+  input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:999px}
+
+  /* receipt */
+  .receipt{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;display:flex;flex-direction:column;gap:1px}
+  .receipt + .receipt{margin-top:12px}
+  .receipt-head{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 6px}
+  .rrow{display:flex;align-items:baseline;gap:8px;padding:6px 0;font-size:14px}
   .rrow .k{color:var(--ink-2);flex:0 0 auto}
-  .rrow .dots{
-    flex:1 1 auto;
-    border-bottom:1px dotted var(--line-strong);
-    transform:translateY(-4px);
-    min-width:12px;
-  }
-  .rrow .v{
-    flex:0 0 auto;
-    font-family:var(--mono);
-    font-variant-numeric:tabular-nums;
-    font-weight:500;
-    color:var(--ink);
-  }
-  .rrow.total{
-    margin-top:8px;
-    padding-top:12px;
-    border-top:1.5px solid var(--line-strong);
-    font-size:15px;
-  }
+  .rrow .dots{flex:1 1 auto;border-bottom:1px dotted var(--line-strong);transform:translateY(-4px);min-width:12px}
+  .rrow .v{flex:0 0 auto;font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500;color:var(--ink);word-break:normal}
+  .rrow.total{margin-top:8px;padding-top:12px;border-top:1.5px solid var(--line-strong);font-size:15px}
   .rrow.total .k{color:var(--ink);font-weight:600}
   .rrow.total .v{font-weight:600;font-size:17px}
   .rrow.sub .k,.rrow.sub .v{color:var(--ink-3);font-size:13px}
   .rrow .v.neg{color:var(--bad)}
+  .rrow .v.pos{color:var(--good)}
 
-  .receipt-head{
-    font-size:11.5px;
-    letter-spacing:.12em;
-    text-transform:uppercase;
-    color:var(--ink-3);
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  .receipt + .receipt{margin-top:12px}
-
-  /* ---------- hero result ---------- */
-  .hero{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:22px 20px;
-    box-shadow:var(--shadow);
-  }
-  .hero-label{
-    font-size:13px;
-    color:var(--ink-2);
-    margin:0;
-  }
+  /* hero */
+  .hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:22px 20px;box-shadow:var(--shadow)}
+  .hero-label{font-size:13px;color:var(--ink-2);margin:0}
   .hero-number{
-    font-family:var(--mono);
-    font-variant-numeric:tabular-nums;
-    font-weight:600;
-    font-size:clamp(40px,11vw,56px);
-    line-height:1.05;
-    letter-spacing:-.02em;
-    margin:6px 0 0;
-    color:var(--ink);
-    display:flex;
-    align-items:baseline;
-    gap:6px;
-    flex-wrap:wrap;
+    font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;
+    font-size:clamp(38px,10.5vw,56px);line-height:1.05;letter-spacing:-.02em;
+    margin:6px 0 0;color:var(--ink);display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;
   }
   .hero-number .u{font-size:20px;font-weight:500;color:var(--ink-2);font-family:var(--sans)}
-  .hero-note{
-    margin:10px 0 0;
-    font-size:13.5px;
-    color:var(--ink-2);
-  }
-  .hero-note b{font-family:var(--mono);font-weight:600;color:var(--ink)}
-
-  .pill{
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    font-size:12.5px;
-    font-weight:600;
-    padding:3px 10px;
-    border-radius:999px;
-    margin-top:12px;
-  }
-  .pill::before{
-    content:"";
-    width:7px;height:7px;border-radius:50%;
-    background:currentColor;
-    flex:0 0 auto;
-  }
+  .hero-note{margin:10px 0 0;font-size:13.5px;color:var(--ink-2)}
+  .hero-note b{font-family:var(--mono);font-weight:600;color:var(--ink);word-break:normal}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px;margin-top:12px}
+  .pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:0 0 auto}
   .pill.good{color:var(--good);background:var(--good-soft)}
   .pill.warn{color:var(--warn);background:var(--warn-soft)}
   .pill.bad{color:var(--bad);background:var(--bad-soft)}
 
-  /* ---------- timeline ---------- */
+  /* timeline */
   .timeline{margin-top:22px}
-  .tl-title{
-    font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
-    color:var(--ink-3);font-weight:600;margin:0 0 10px;
-  }
-  .tl-track{
-    position:relative;
-    height:10px;
-    background:var(--surface-2);
-    border-radius:999px;
-    overflow:hidden;
-  }
-  .tl-fill{
-    position:absolute;inset:0 auto 0 0;
-    background:var(--accent);
-    border-radius:999px;
-    width:0;
-    transition:width .35s ease;
-  }
-  .tl-ticks{
-    position:relative;
-    height:16px;
-    margin-top:6px;
-  }
-  .tl-tick{
-    position:absolute;
-    top:0;
-    transform:translateX(-50%);
-    font-family:var(--mono);
-    font-size:10.5px;
-    color:var(--ink-3);
-    white-space:nowrap;
-  }
+  .tl-title{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0 0 10px}
+  .tl-track{position:relative;height:10px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+  .tl-ramp{position:absolute;top:0;bottom:0;left:0;background:var(--accent-soft);width:0}
+  .tl-fill{position:absolute;top:0;bottom:0;left:0;background:var(--accent);border-radius:999px;width:0;transition:width .35s ease}
+  .tl-ticks{position:relative;height:16px;margin-top:6px}
+  .tl-tick{position:absolute;top:0;transform:translateX(-50%);font-family:var(--mono);font-size:10.5px;color:var(--ink-3);white-space:nowrap}
   .tl-tick:first-child{transform:translateX(0)}
   .tl-tick:last-child{transform:translateX(-100%)}
-  @media (prefers-reduced-motion: reduce){
-    .tl-fill{transition:none}
-  }
+  .tl-legend{margin:10px 0 0;font-size:12px;color:var(--ink-3);display:flex;gap:14px;flex-wrap:wrap}
+  .tl-legend span{display:inline-flex;align-items:center;gap:6px}
+  .tl-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+  @media (prefers-reduced-motion: reduce){.tl-fill{transition:none}}
 
-  /* ---------- callout ---------- */
-  .callout{
-    border-left:3px solid var(--accent);
-    background:var(--accent-soft);
-    border-radius:0 10px 10px 0;
-    padding:14px 16px;
+  /* stat tiles */
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px}
+  @media (max-width:600px){.tiles{grid-template-columns:1fr}}
+  .tile{background:var(--tile);border:1px solid var(--line);border-radius:11px;padding:14px}
+  .tile .t-label{font-size:12px;color:var(--ink-3);margin:0;line-height:1.45}
+  .tile .t-num{
+    font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:600;
+    font-size:23px;line-height:1.2;margin:5px 0 0;color:var(--ink);word-break:normal;
   }
+  .tile .t-num .u{font-size:13px;font-weight:500;color:var(--ink-2);font-family:var(--sans);margin-left:2px}
+  .tile .t-sub{font-size:11.5px;color:var(--ink-3);margin:4px 0 0;line-height:1.45}
+  .tile.accent{background:var(--accent-soft);border-color:transparent}
+  .tile.accent .t-num,.tile.accent .t-label{color:var(--ink)}
+
+  /* callout */
+  .callout{border-left:3px solid var(--accent);background:var(--accent-soft);border-radius:0 10px 10px 0;padding:14px 16px}
   .callout p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.7}
   .callout p + p{margin-top:8px}
-  .callout .quote{
-    font-family:var(--serif);
-    font-size:15px;
-    color:var(--ink);
-    line-height:1.65;
-  }
-  .callout b{color:var(--ink);font-weight:600}
+  .callout .quote{font-family:var(--serif);font-size:15px;color:var(--ink);line-height:1.65}
+  .callout b{color:var(--ink);font-weight:600;word-break:normal}
 
-  /* ---------- compare ---------- */
+  .note{border:1px dashed var(--line-strong);border-radius:11px;padding:13px 15px;font-size:13px;color:var(--ink-2);line-height:1.7}
+  .note b{color:var(--ink);font-weight:600}
+
+  /* buttons */
   .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-  button{
-    font-family:inherit;
-    font-size:13.5px;
-    font-weight:500;
-    padding:8px 14px;
-    border-radius:9px;
-    border:1px solid var(--line-strong);
-    background:var(--surface);
-    color:var(--ink);
-    cursor:pointer;
-  }
+  button{font-family:inherit;font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:9px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer}
   button:hover{background:var(--surface-2)}
   button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
   button.primary:hover{filter:brightness(1.08)}
   button.ghost{border-style:dashed;color:var(--ink-2)}
 
-  .cmp-scroll{overflow-x:auto;margin-top:14px}
-  table{border-collapse:collapse;width:100%;min-width:420px;font-size:13px}
-  th,td{
-    text-align:right;
-    padding:9px 10px;
-    border-bottom:1px solid var(--line);
-    white-space:nowrap;
-  }
+  /* tables */
+  .scroll-x{overflow-x:auto;margin-top:14px}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  table.cmp{min-width:460px}
+  table.scn{min-width:340px}
+  th,td{text-align:right;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
   th:first-child,td:first-child{text-align:left}
-  thead th{
-    font-size:11.5px;
-    letter-spacing:.06em;
-    color:var(--ink-3);
-    font-weight:600;
-    border-bottom:1.5px solid var(--line-strong);
-  }
+  thead th{font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);font-weight:600;border-bottom:1.5px solid var(--line-strong)}
   tbody td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink);word-break:normal}
   tbody td:first-child{font-family:var(--sans);color:var(--ink);font-weight:500}
   tbody tr:last-child td{border-bottom:0}
-  td .del{
-    font-family:var(--sans);
-    font-size:11px;
-    color:var(--ink-3);
-    border:0;background:none;padding:2px 4px;cursor:pointer;
-  }
+  tbody tr.me td{background:var(--accent-soft)}
+  td .del{font-family:var(--sans);font-size:11px;color:var(--ink-3);border:0;background:none;padding:2px 4px;cursor:pointer}
   td .del:hover{color:var(--bad)}
+  td.neg{color:var(--bad)}
   .empty{color:var(--ink-3);font-size:13px;margin:14px 0 0}
 
-  /* ---------- footer ---------- */
-  footer{
-    border-top:1px solid var(--line);
-    padding-top:22px;
-    color:var(--ink-3);
-    font-size:13px;
-  }
+  /* cta */
+  .cta{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .cta h2{margin:0 0 8px;font-family:var(--serif);font-size:19px;font-weight:700;letter-spacing:-.01em}
+  .cta p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.7}
+  .cta ul{margin:12px 0 0;padding-left:18px;font-size:13.5px;color:var(--ink-2);line-height:1.8}
+  .cta li::marker{color:var(--accent-ink)}
+
+  footer{border-top:1px solid var(--line);padding-top:22px;color:var(--ink-3);font-size:13px}
   footer p{margin:0 0 8px}
   footer .sig{font-family:var(--serif);color:var(--ink-2);font-size:14px}
 
-  .badge{
-    display:inline-block;
-    font-size:11px;
-    font-weight:600;
-    letter-spacing:.04em;
-    color:var(--accent-ink);
-    background:var(--accent-soft);
-    padding:2px 8px;
-    border-radius:6px;
-    vertical-align:middle;
-    margin-left:6px;
-  }
+  .badge{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--accent-ink);background:var(--accent-soft);padding:2px 8px;border-radius:6px;vertical-align:middle;margin-left:6px}
 
   @media (max-width:430px){
     .field{flex-wrap:wrap;gap:4px}
     .field label{flex:1 1 100%}
     .money{margin-left:auto}
     .money input{width:7.2em}
+    .money input.narrow{width:5em}
   }
 </style>
 
@@ -434,26 +270,30 @@
     <p class="eyebrow">계약 전 30초</p>
     <h1>마음에 드는 매장이어도<br>계약 전 숫자부터 확인하세요</h1>
     <p class="lede">
-      매물 보러 가서 <strong>바로 계산해보라고</strong> 만든 계산기예요.
-      아래 숫자는 예시라서, 지금 보고 있는 매물 숫자로 바꿔서 써보시면 돼요.
-      단위는 전부 <strong>만원</strong>입니다.
+      매물 보러 가서 <strong>그 자리에서 계산해보라고</strong> 만든 계산기예요.
+      아래 숫자는 예시니까, 지금 보고 있는 매물 숫자로 바꿔서 써보시면 돼요.
+    </p>
+    <p class="lede">
+      모르는 항목은 <strong>대충 넣으셔도 괜찮아요.</strong>
+      대충이라도 넣어보는 게, 안 넣어보고 계약하는 것보다 훨씬 나아요.
+      금액 단위는 따로 표시된 것 빼고 전부 <strong>만원</strong>입니다.
     </p>
   </header>
 
   <section class="panel">
-    <h2>초기 투자금</h2>
+    <h2>1. 초기 투자금</h2>
     <p class="hint">계약할 때 한 번에 나가는 돈이에요.</p>
     <div class="fields">
       <div class="field">
-        <label for="deposit">보증금<span class="sub">나갈 때 돌려받는 돈</span></label>
+        <label for="deposit">보증금<span class="sub">나갈 때 돌려받는 돈이에요</span></label>
         <span class="money"><input id="deposit" inputmode="numeric" value="1,000"><span class="unit">만원</span></span>
       </div>
       <div class="field">
-        <label for="premium">권리금<span class="sub">나갈 때 그대로 받는다는 보장이 없는 돈</span></label>
+        <label for="premium">권리금<span class="sub">나갈 때 그대로 받는다는 보장이 없는 돈이에요</span></label>
         <span class="money"><input id="premium" inputmode="numeric" value="2,000"><span class="unit">만원</span></span>
       </div>
       <div class="field">
-        <label for="interior">인테리어<span class="sub">철거·전기 공사까지 포함해서</span></label>
+        <label for="interior">인테리어<span class="sub">철거·전기 증설·급배수 공사까지 포함해서</span></label>
         <span class="money"><input id="interior" inputmode="numeric" value="1,500"><span class="unit">만원</span></span>
       </div>
       <div class="field">
@@ -461,55 +301,100 @@
         <span class="money"><input id="equipment" inputmode="numeric" value="500"><span class="unit">만원</span></span>
       </div>
       <div class="field">
-        <label for="etcInit">기타 초기비용<span class="sub">간판, 중개수수료, 인허가, 오픈 홍보</span></label>
+        <label for="etcInit">기타 초기비용<span class="sub">간판, 중개수수료, 소방·인허가, 예약프로그램, 오픈 홍보</span></label>
         <span class="money"><input id="etcInit" inputmode="numeric" value="200"><span class="unit">만원</span></span>
       </div>
+    </div>
+    <div class="note" style="margin-top:16px">
+      <b>여기서 자주 빠지는 것들이에요.</b> 인테리어 견적의 부가세 10%, 중개수수료,
+      간판 제작·철거비, 에어컨 이전 설치비, 소방 필증, 카드단말기, 초도 재료비, 오픈 전 월세.
+      합치면 생각보다 큽니다. 모르겠으면 기타 초기비용을 넉넉하게 잡아두세요.
     </div>
   </section>
 
   <section class="panel">
-    <h2>매달 나가는 돈</h2>
+    <h2>2. 매달 나가는 돈</h2>
     <p class="hint">손님이 한 명도 안 와도 나가는 돈이 고정비예요.</p>
     <div class="fields">
       <div class="field">
-        <label for="rent">월세<span class="sub">부가세 별도인지 꼭 확인하세요</span></label>
+        <label for="rent">월세<span class="sub">계약서에 적힌 금액 그대로 넣으세요</span></label>
         <span class="money"><input id="rent" inputmode="numeric" value="120"><span class="unit">만원</span></span>
       </div>
+    </div>
+    <label class="check" for="rentVat">
+      <input type="checkbox" id="rentVat" checked>
+      <span><b>월세가 부가세 별도예요</b> — 상가는 대부분 별도라서 실제로는 10%가 더 나갑니다. 계약 전에 꼭 물어보세요.</span>
+    </label>
+    <div class="fields" style="margin-top:8px">
       <div class="field">
-        <label for="maintenance">관리비<span class="sub">공용 전기·수도 포함 여부 확인</span></label>
+        <label for="maintenance">관리비<span class="sub">공용 전기·수도가 포함인지 따로인지 확인하세요</span></label>
         <span class="money"><input id="maintenance" inputmode="numeric" value="15"><span class="unit">만원</span></span>
       </div>
       <div class="field">
-        <label for="etcFixed">기타 월 고정비<span class="sub">보험, 프로그램, 대출 이자, 광고비</span></label>
+        <label for="etcFixed">기타 월 고정비<span class="sub">보험, 예약프로그램, 대출 이자, 고정 광고비</span></label>
         <span class="money"><input id="etcFixed" inputmode="numeric" value="30"><span class="unit">만원</span></span>
       </div>
     </div>
   </section>
 
   <section class="panel">
-    <h2>예상 매출</h2>
-    <p class="hint">기존 매출을 그대로 믿지 말고, 보수적으로 잡아보세요.</p>
+    <h2>3. 예상 매출</h2>
+    <p class="hint">기존 매출을 그대로 믿지 말고, <b>보수적으로</b> 잡아보세요.</p>
     <div class="fields">
       <div class="field">
-        <label for="revenue">예상 월매출<span class="sub">카드 수수료 빼기 전 금액</span></label>
+        <label for="revenue">자리 잡았을 때 월매출<span class="sub">지금이 아니라, 안정된 뒤 기준이에요</span></label>
         <span class="money"><input id="revenue" inputmode="numeric" value="800"><span class="unit">만원</span></span>
       </div>
       <div class="field">
-        <label for="variable">월 변동비<span class="sub">재료비, 직원 급여, 카드 수수료</span></label>
+        <label for="variable">월 변동비<span class="sub">재료비, 직원 급여, 카드 수수료처럼 매출에 따라 움직이는 돈</span></label>
         <span class="money"><input id="variable" inputmode="numeric" value="250"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="ticket">평균 객단가<span class="sub">손님 한 명이 한 번에 쓰는 평균 금액</span></label>
+        <span class="money"><input id="ticket" class="wide" inputmode="numeric" value="80,000"><span class="unit">원</span></span>
+      </div>
+      <div class="field">
+        <label for="openDays">한 달 영업일수<span class="sub">주 6일이면 26일, 주 5일이면 22일쯤</span></label>
+        <span class="money"><input id="openDays" class="narrow" inputmode="numeric" value="26"><span class="unit">일</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>4. 오픈하고 자리 잡기까지</h2>
+    <p class="hint">여기를 안 넣으면 계산이 너무 예뻐집니다. 오픈하자마자 예상 매출이 나오는 가게는 거의 없어요.</p>
+    <div>
+      <div class="slider">
+        <div class="slider-top">
+          <label for="rampMonths">자리 잡기까지 걸리는 기간</label>
+          <span class="slider-val" id="rampMonthsVal">6개월</span>
+        </div>
+        <span class="sub">단골이 생기고 매출이 안정될 때까지요. 보통 6개월에서 1년은 봅니다.</span>
+        <input type="range" id="rampMonths" min="0" max="18" step="1" value="6">
+      </div>
+      <div class="slider">
+        <div class="slider-top">
+          <label for="rampRate">그동안의 평균 매출</label>
+          <span class="slider-val" id="rampRateVal">60%</span>
+        </div>
+        <span class="sub">자리 잡았을 때 매출을 100%로 봤을 때, 그전까지 평균 몇 %쯤 나올지예요.</span>
+        <input type="range" id="rampRate" min="10" max="100" step="5" value="60">
       </div>
     </div>
   </section>
 
   <section class="hero" aria-live="polite">
     <p class="hero-label">투자금 회수까지</p>
-    <p class="hero-number"><span id="paybackNum">13.5</span><span class="u">개월</span></p>
+    <p class="hero-number"><span id="paybackNum">17.5</span><span class="u" id="paybackUnit">개월</span></p>
     <span class="pill good" id="statusPill">회수 기간 양호</span>
     <p class="hero-note" id="heroNote"></p>
 
     <div class="timeline">
       <p class="tl-title">회수 시점</p>
-      <div class="tl-track"><div class="tl-fill" id="tlFill"></div></div>
+      <div class="tl-track">
+        <div class="tl-ramp" id="tlRamp"></div>
+        <div class="tl-fill" id="tlFill"></div>
+      </div>
       <div class="tl-ticks">
         <span class="tl-tick" style="left:0%">0</span>
         <span class="tl-tick" style="left:20%">12개월</span>
@@ -518,7 +403,56 @@
         <span class="tl-tick" style="left:80%">48개월</span>
         <span class="tl-tick" style="left:100%">60개월</span>
       </div>
+      <p class="tl-legend">
+        <span><i style="background:var(--accent-soft);border:1px solid var(--line-strong)"></i>자리 잡는 기간</span>
+        <span><i style="background:var(--accent)"></i>회수까지 걸리는 기간</span>
+      </p>
     </div>
+  </section>
+
+  <section class="panel">
+    <h2>실제로 준비해야 하는 돈</h2>
+    <p class="hint">초기 투자금만 준비하면 오픈 직후에 숨이 막힙니다. <b>버틸 돈</b>이 따로 있어야 해요.</p>
+    <div class="tiles">
+      <div class="tile">
+        <p class="t-label">초기 투자금</p>
+        <p class="t-num" id="tInit">5,200<span class="u">만원</span></p>
+        <p class="t-sub">계약할 때 한 번에</p>
+      </div>
+      <div class="tile">
+        <p class="t-label">운영 여유자금</p>
+        <p class="t-num" id="tReserve">531<span class="u">만원</span></p>
+        <p class="t-sub" id="tReserveSub">고정비 3개월치</p>
+      </div>
+      <div class="tile accent">
+        <p class="t-label">그래서 진짜 필요한 돈</p>
+        <p class="t-num" id="tNeed">5,731<span class="u">만원</span></p>
+        <p class="t-sub">이만큼은 있어야 안 흔들려요</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>하루에 몇 명을 받아야 할까</h2>
+    <p class="hint">월매출은 감이 안 와도, <b>하루 손님 수</b>는 감이 옵니다. 이 숫자가 현실적인지 보세요.</p>
+    <div class="tiles">
+      <div class="tile">
+        <p class="t-label">본전 맞추는 매출</p>
+        <p class="t-num" id="tBep">257<span class="u">만원</span></p>
+        <p class="t-sub">이만큼 못 팔면 적자예요</p>
+      </div>
+      <div class="tile">
+        <p class="t-label">본전 맞추려면 하루</p>
+        <p class="t-num" id="tBepDay">1.2<span class="u">명</span></p>
+        <p class="t-sub" id="tBepMonth">한 달 32명</p>
+      </div>
+      <div class="tile">
+        <p class="t-label">목표 매출 채우려면 하루</p>
+        <p class="t-num" id="tGoalDay">3.8<span class="u">명</span></p>
+        <p class="t-sub" id="tGoalMonth">한 달 100명</p>
+      </div>
+    </div>
+    <div class="note" style="margin-top:14px" id="capacityNote"></div>
   </section>
 
   <section class="panel">
@@ -535,12 +469,28 @@
     </div>
 
     <div class="receipt">
-      <p class="receipt-head">매달 도는 돈</p>
+      <p class="receipt-head">매달 도는 돈 (자리 잡은 뒤)</p>
       <div class="rrow"><span class="k">예상 월매출</span><span class="dots"></span><span class="v" id="rRevenue"></span></div>
-      <div class="rrow"><span class="k">월 고정비</span><span class="dots"></span><span class="v" id="rFixed"></span></div>
+      <div class="rrow"><span class="k">월세</span><span class="dots"></span><span class="v" id="rRent"></span></div>
+      <div class="rrow"><span class="k">관리비 · 기타 고정비</span><span class="dots"></span><span class="v" id="rFixedEtc"></span></div>
       <div class="rrow"><span class="k">월 변동비</span><span class="dots"></span><span class="v" id="rVariable"></span></div>
       <div class="rrow total"><span class="k">예상 월 순이익</span><span class="dots"></span><span class="v" id="rProfit"></span></div>
-      <div class="rrow sub"><span class="k">매출이 이만큼은 나와야 본전</span><span class="dots"></span><span class="v" id="rBreakeven"></span></div>
+      <div class="rrow sub"><span class="k">자리 잡는 동안의 월 순이익</span><span class="dots"></span><span class="v" id="rRampProfit"></span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>생각대로 안 될 때</h2>
+    <p class="hint">계약은 잘 될 때가 아니라 <b>안 될 때</b>를 기준으로 결정하는 거예요.</p>
+    <div class="scroll-x">
+      <table class="scn">
+        <thead><tr><th>매출이</th><th>월 순이익</th><th>회수 기간</th></tr></thead>
+        <tbody id="scnBody"></tbody>
+      </table>
+    </div>
+    <div class="note" style="margin-top:14px">
+      매출이 예상의 <b>70%</b>만 나와도 버틸 수 있는 매물인지 보세요.
+      그 줄에서 답이 안 나오면, 그 매물은 잘 될 때만 되는 매물이에요.
     </div>
   </section>
 
@@ -548,19 +498,19 @@
     <p class="quote">“권리금은 나갈 때 그대로 받는 돈이 아니에요.”</p>
     <p>
       지금 매물의 권리금은 초기 투자금의 <b id="premiumShare">38%</b>예요.
-      제 첫 가게는 권리금 <b>3,800만원</b>을 주고 들어가서,
-      3년 뒤에 <b>600만원</b>을 받고 나왔어요.
+      권리금만 순이익으로 회수하는 데 <b id="premiumPayback">5.4개월</b>이 걸리고요.
+      제 첫 가게는 권리금 <b>3,800만원</b>을 주고 들어가서, 3년 뒤에 <b>600만원</b>을 받고 나왔어요.
     </p>
     <p>
       그래서 보증금을 뺀 <b id="unrecInline">4,200만원</b>은
       <b>돌아오지 않는다고 생각하고</b> 계산하는 게 안전해요.
-      그 기준으로 보면 회수까지 <b id="paybackUnrec">10.9개월</b>이 걸려요.
+      그 기준으로 보면 회수까지 <b id="paybackUnrec">14.8개월</b>이 걸려요.
     </p>
   </section>
 
   <section class="panel">
     <h2>매물 비교하기<span class="badge">최대 3개</span></h2>
-    <p class="hint">마음에 드는 매물이 있어도 최소 3개는 비교해보세요. 저장한 값은 이 브라우저에만 남아요.</p>
+    <p class="hint">마음에 드는 매물이 있어도 <b>최소 3개</b>는 비교해보세요. 저장한 값은 이 브라우저에만 남고, 아무 데도 안 보내집니다.</p>
     <div class="btnrow">
       <button class="primary" id="saveBtn">지금 숫자 저장</button>
       <button class="ghost" id="clearBtn">전체 지우기</button>
@@ -568,8 +518,23 @@
     <div id="cmpArea"></div>
   </section>
 
+  <section class="cta">
+    <h2>숫자가 괜찮게 나왔다면, 그다음은 확인이에요</h2>
+    <p>
+      숫자가 맞아떨어져도 계약서에서 틀어지면 소용이 없어요. 매물 보러 가시기 전에 이것만은 꼭 확인하세요.
+    </p>
+    <ul>
+      <li>권리금을 <b>시설 / 영업 / 바닥</b>으로 나눠서 각각 얼마인지 물어보기</li>
+      <li>매출은 말이 아니라 <b>부가세 신고서와 카드 매출 내역 12개월치</b>로 확인하기</li>
+      <li><b>등기부등본</b> 떼서 근저당 확인하기 (건물이 경매로 넘어가면 보증금이 위험해요)</li>
+      <li>내 시술에 필요한 <b>전기 용량·급배수·환기</b>가 되는 자리인지 확인하기</li>
+      <li>구두로 약속받은 건 전부 <b>특약</b>에 적어 넣기</li>
+    </ul>
+  </section>
+
   <footer>
-    <p>이 계산기는 계약 전에 숫자를 한 번 더 보게 하려고 만든 도구예요. 세금과 대출 이자, 매출이 자리 잡기까지 걸리는 시간은 빠져 있으니 실제로는 더 넉넉하게 잡으셔야 해요.</p>
+    <p>이 계산기는 계약 전에 숫자를 한 번 더 보게 하려고 만든 도구예요. 세금(종합소득세·부가세)과 대출 원금 상환, 사장 본인 생활비는 빠져 있으니 실제로는 더 넉넉하게 잡으셔야 해요.</p>
+    <p>입력한 숫자는 이 브라우저에만 저장되고 서버로 전송되지 않습니다.</p>
     <p class="sig">23살에 아무것도 모르고 사장부터 해본 사람이 만들었습니다.</p>
   </footer>
 
@@ -577,228 +542,338 @@
 
 <script>
 (function(){
-  var IDS = ["deposit","premium","interior","equipment","etcInit","rent","maintenance","etcFixed","revenue","variable"];
+  var MONEY_IDS = ["deposit","premium","interior","equipment","etcInit","rent","maintenance","etcFixed","revenue","variable","ticket","openDays"];
   var el = {};
-  IDS.forEach(function(id){ el[id] = document.getElementById(id); });
+  MONEY_IDS.forEach(function(id){ el[id] = document.getElementById(id); });
+  var rentVat = document.getElementById("rentVat");
+  var rampMonths = document.getElementById("rampMonths");
+  var rampRate = document.getElementById("rampRate");
 
   function num(v){
     var n = parseInt(String(v).replace(/[^0-9]/g,""), 10);
     return isNaN(n) ? 0 : n;
   }
-  function comma(n){ return n.toLocaleString("ko-KR"); }
+  function comma(n){ return Math.round(n).toLocaleString("ko-KR"); }
 
-  // 만원 단위 정수를 한국식 금액 문자열로
+  // 만원 단위 숫자를 한국식 금액 문자열로
   function money(man){
-    if(man === 0) return "0원";
-    var eok = Math.floor(man / 10000);
-    var rest = man % 10000;
-    if(eok > 0 && rest > 0) return comma(eok) + "억 " + comma(rest) + "만원";
-    if(eok > 0) return comma(eok) + "억원";
-    return comma(man) + "만원";
+    var r = Math.round(man);
+    if(r === 0) return "0원";
+    var sign = r < 0 ? "-" : "";
+    r = Math.abs(r);
+    var eok = Math.floor(r / 10000), rest = r % 10000;
+    if(eok > 0 && rest > 0) return sign + comma(eok) + "억 " + comma(rest) + "만원";
+    if(eok > 0) return sign + comma(eok) + "억원";
+    return sign + comma(r) + "만원";
+  }
+  function setText(id, t){ var n = document.getElementById(id); if(n) n.textContent = t; }
+  // "5,200만원" -> ["5,200","만원"] 처럼 숫자와 단위를 분리
+  function splitMoney(man){
+    var t = money(man);
+    var m = t.match(/^(.*?)(만원|억원|원)$/);
+    return m ? [m[1], m[2]] : [t, ""];
+  }
+  function setMoneyTile(id, man){
+    var parts = splitMoney(man);
+    setNum(id, parts[0], parts[1]);
+  }
+  function setNum(id, value, unit){
+    var n = document.getElementById(id);
+    if(!n) return;
+    n.innerHTML = "";
+    n.appendChild(document.createTextNode(value));
+    if(unit){
+      var u = document.createElement("span");
+      u.className = "u"; u.textContent = unit;
+      n.appendChild(u);
+    }
+  }
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
   }
 
   function read(){
     var v = {};
-    IDS.forEach(function(id){ v[id] = num(el[id].value); });
+    MONEY_IDS.forEach(function(id){ v[id] = num(el[id].value); });
+    v.rentVat = rentVat.checked;
+    v.rampMonths = parseInt(rampMonths.value, 10);
+    v.rampRate = parseInt(rampRate.value, 10) / 100;
     return v;
   }
 
   function derive(v){
+    var rentTotal = v.rent * (v.rentVat ? 1.1 : 1);
+    var fixed = rentTotal + v.maintenance + v.etcFixed;
     var totalInit = v.deposit + v.premium + v.interior + v.equipment + v.etcInit;
     var unrec = v.premium + v.interior + v.equipment + v.etcInit;
-    var fixed = v.rent + v.maintenance + v.etcFixed;
-    var profit = v.revenue - fixed - v.variable;
+    var vRate = v.revenue > 0 ? v.variable / v.revenue : 0;
+
+    function profitAt(rev){ return rev - fixed - rev * vRate; }
+
+    // 자리 잡는 기간(rampM개월, 월 rampP)을 지나 안정기(월 steadyP)에 접어드는 흐름에서
+    // target 금액을 회수하는 데 걸리는 개월 수
+    function paybackWith(target, rampM, rampP, steadyP){
+      if(target <= 0) return 0;
+      var cum = rampM * rampP;
+      if(rampP > 0 && cum >= target) return target / rampP;
+      if(steadyP <= 0) return null;
+      return rampM + (target - cum) / steadyP;
+    }
+
+    var steady = profitAt(v.revenue);
+    var ramp = profitAt(v.revenue * v.rampRate);
+    var bep = vRate < 1 ? fixed / (1 - vRate) : null;
+
+    function payback(target){ return paybackWith(target, v.rampMonths, ramp, steady); }
+
+    var rampLoss = v.rampMonths * Math.max(0, -ramp);
+    var reserve = rampLoss + fixed * 3;
+
     return {
+      rentTotal: rentTotal,
+      fixed: fixed,
+      fixedEtc: v.maintenance + v.etcFixed,
       totalInit: totalInit,
       unrec: unrec,
       rest: v.interior + v.equipment + v.etcInit,
-      fixed: fixed,
-      profit: profit,
-      breakeven: fixed + v.variable,
+      vRate: vRate,
+      steady: steady,
+      ramp: ramp,
+      bep: bep,
+      rampLoss: rampLoss,
+      reserve: reserve,
+      need: totalInit + reserve,
       premiumShare: totalInit > 0 ? Math.round(v.premium / totalInit * 100) : 0,
-      payback: profit > 0 ? totalInit / profit : null,
-      paybackUnrec: profit > 0 ? unrec / profit : null
+      premiumPayback: steady > 0 ? v.premium / steady : null,
+      payback: payback(totalInit),
+      paybackUnrec: payback(unrec),
+      simplePayback: steady > 0 ? totalInit / steady : null,
+      profitAt: profitAt,
+      paybackWith: paybackWith
     };
   }
 
-  function months(m){
-    if(m === null) return null;
-    return Math.round(m * 10) / 10;
-  }
-
-  function setText(id, text){
-    var node = document.getElementById(id);
-    if(node) node.textContent = text;
+  function m1(x){ return Math.round(x * 10) / 10; }
+  function showMonths(x){
+    if(x === null) return "회수 불가";
+    if(x >= 100) return Math.round(x) + "개월";
+    return m1(x).toFixed(1) + "개월";
   }
 
   function render(){
-    var v = read();
-    var d = derive(v);
+    var v = read(), d = derive(v);
 
+    setText("rampMonthsVal", v.rampMonths === 0 ? "바로 안정" : v.rampMonths + "개월");
+    setText("rampRateVal", Math.round(v.rampRate * 100) + "%");
+
+    // 영수증
     setText("rDeposit", money(v.deposit));
     setText("rPremium", money(v.premium));
     setText("rRest", money(d.rest));
     setText("rTotalInit", money(d.totalInit));
     setText("rUnrec", money(d.unrec));
     setText("rRevenue", money(v.revenue));
-    setText("rFixed", money(d.fixed));
+    setText("rRent", money(d.rentTotal) + (v.rentVat ? " (VAT 포함)" : ""));
+    setText("rFixedEtc", money(d.fixedEtc));
     setText("rVariable", money(v.variable));
-    setText("rBreakeven", "월 " + money(d.breakeven));
 
-    var profitNode = document.getElementById("rProfit");
-    profitNode.textContent = (d.profit < 0 ? "-" : "") + money(Math.abs(d.profit));
-    profitNode.classList.toggle("neg", d.profit <= 0);
+    var pn = document.getElementById("rProfit");
+    pn.textContent = money(d.steady);
+    pn.className = "v" + (d.steady <= 0 ? " neg" : "");
 
-    setText("premiumShare", d.premiumShare + "%");
-    setText("unrecInline", money(d.unrec));
+    var rp = document.getElementById("rRampProfit");
+    rp.textContent = money(d.ramp);
+    rp.className = "v" + (d.ramp <= 0 ? " neg" : "");
 
-    var pb = months(d.payback);
-    var pbu = months(d.paybackUnrec);
+    // 준비해야 하는 돈
+    setMoneyTile("tInit", d.totalInit);
+    setMoneyTile("tReserve", d.reserve);
+    setMoneyTile("tNeed", d.need);
+    setText("tReserveSub", d.rampLoss > 0
+      ? "자리 잡는 동안 적자 " + money(d.rampLoss) + " + 고정비 3개월치"
+      : "고정비 3개월치 (자리 잡는 동안도 흑자예요)");
+
+    // 손익분기 · 하루 손님 수
+    if(d.bep === null || v.ticket <= 0 || v.openDays <= 0){
+      if(d.bep === null){ setNum("tBep", "계산 불가", ""); } else { setMoneyTile("tBep", d.bep); }
+      setNum("tBepDay", "—", "");
+      setNum("tGoalDay", "—", "");
+      setText("tBepMonth", "객단가와 영업일수를 넣어주세요");
+      setText("tGoalMonth", "");
+      document.getElementById("capacityNote").textContent =
+        "객단가와 한 달 영업일수를 넣으면 하루에 몇 명을 받아야 하는지 계산해드려요.";
+    } else {
+      var bepMonthCnt = d.bep * 10000 / v.ticket;
+      var goalMonthCnt = v.revenue * 10000 / v.ticket;
+      var bepDay = bepMonthCnt / v.openDays;
+      var goalDay = goalMonthCnt / v.openDays;
+
+      setMoneyTile("tBep", d.bep);
+      setNum("tBepDay", m1(bepDay).toFixed(1), "명");
+      setNum("tGoalDay", m1(goalDay).toFixed(1), "명");
+      setText("tBepMonth", "한 달 " + comma(bepMonthCnt) + "명");
+      setText("tGoalMonth", "한 달 " + comma(goalMonthCnt) + "명");
+
+      var cap = document.getElementById("capacityNote");
+      var mins = 90; // 시술 1건 평균 소요시간 가정
+      var hours = goalDay * mins / 60;
+      cap.innerHTML = "목표 매출을 채우려면 <b>하루 " + m1(goalDay).toFixed(1) + "명</b>이에요. " +
+        "시술 한 건에 1시간 30분씩 잡으면 하루 <b>" + m1(hours).toFixed(1) + "시간</b>을 손님으로 채워야 한다는 뜻이고요. " +
+        (goalDay > 8
+          ? "혼자서는 빠듯한 숫자예요. 직원을 쓰거나 객단가를 올려야 나오는 매출입니다."
+          : "지금 이 상권에서, 오픈 초기에 이만큼 받을 수 있을지 한 번만 더 생각해보세요.");
+    }
+
+    // 히어로
     var pill = document.getElementById("statusPill");
     var note = document.getElementById("heroNote");
     var fill = document.getElementById("tlFill");
+    var rampBar = document.getElementById("tlRamp");
+    var unitNode = document.getElementById("paybackUnit");
     var numNode = document.getElementById("paybackNum");
-    var unitNode = document.querySelector(".hero-number .u");
 
-    if(pb === null){
+    rampBar.style.width = Math.min(100, v.rampMonths / 60 * 100).toFixed(1) + "%";
+
+    if(d.payback === null){
       numNode.textContent = "회수 불가";
       unitNode.style.display = "none";
       pill.className = "pill bad";
-      pill.textContent = "월 순이익이 0원 이하예요";
-      note.innerHTML = "지금 숫자대로면 매달 <b>" + money(Math.abs(d.profit)) + "</b>씩 손해예요. 매출을 올리든 고정비를 낮추든, 이 매물은 숫자부터 다시 봐야 해요.";
+      pill.textContent = "자리 잡아도 순이익이 0원 이하예요";
+      note.innerHTML = "지금 숫자대로면 자리를 잡은 뒤에도 매달 <b>" + money(Math.abs(d.steady)) +
+        "</b>씩 손해예요. 매출을 올리든 고정비를 낮추든, 이 매물은 숫자부터 다시 봐야 해요.";
       fill.style.width = "100%";
       fill.style.background = "var(--bad)";
-      setText("paybackUnrec", "계산 불가");
     } else {
-      numNode.textContent = pb >= 100 ? Math.round(pb) : pb.toFixed(1);
+      numNode.textContent = d.payback >= 100 ? Math.round(d.payback) : m1(d.payback).toFixed(1);
       unitNode.style.display = "";
       fill.style.background = "var(--accent)";
-      fill.style.width = Math.min(100, pb / 60 * 100).toFixed(1) + "%";
+      fill.style.width = Math.min(100, d.payback / 60 * 100).toFixed(1) + "%";
 
-      if(pb <= 18){
-        pill.className = "pill good";
-        pill.textContent = "회수 기간 양호";
-      } else if(pb <= 36){
-        pill.className = "pill warn";
-        pill.textContent = "회수까지 3년 안쪽";
-      } else {
-        pill.className = "pill bad";
-        pill.textContent = "회수까지 3년 넘게 걸려요";
+      if(d.payback <= 18){ pill.className = "pill good"; pill.textContent = "회수 기간 양호"; }
+      else if(d.payback <= 36){ pill.className = "pill warn"; pill.textContent = "회수까지 3년 안쪽"; }
+      else { pill.className = "pill bad"; pill.textContent = "회수까지 3년 넘게 걸려요"; }
+
+      var extra = "";
+      if(d.simplePayback !== null && v.rampMonths > 0){
+        extra = " 자리 잡는 기간을 빼고 단순 계산하면 <b>" + showMonths(d.simplePayback) +
+          "</b>이지만, 실제로는 그 사이의 공백만큼 더 걸려요.";
       }
-
-      note.innerHTML = "초기 투자금 <b>" + money(d.totalInit) + "</b>을 월 순이익 <b>" +
-        money(d.profit) + "</b>으로 나눈 단순 계산이에요. 매출이 자리 잡기까지 걸리는 시간은 빠져 있어요.";
-      setText("paybackUnrec", pbu.toFixed(1) + "개월");
+      note.innerHTML = "초기 투자금 <b>" + money(d.totalInit) + "</b>을 회수하는 데 걸리는 기간이에요." + extra;
     }
+
+    // 권리금
+    setText("premiumShare", d.premiumShare + "%");
+    setText("premiumPayback", d.premiumPayback === null ? "계산 불가" : showMonths(d.premiumPayback));
+    setText("unrecInline", money(d.unrec));
+    setText("paybackUnrec", showMonths(d.paybackUnrec));
+
+    // 시나리오
+    var scn = [
+      { label: "예상의 70%", r: 0.7 },
+      { label: "예상대로 100%", r: 1 },
+      { label: "예상의 130%", r: 1.3 }
+    ].map(function(s){
+      var rev = v.revenue * s.r;
+      var p = d.profitAt(rev);
+      var rp = d.profitAt(rev * v.rampRate);
+      var pb = d.paybackWith(d.totalInit, v.rampMonths, rp, p);
+      return "<tr" + (s.r === 1 ? ' class="me"' : "") + ">" +
+        "<td>" + s.label + "</td>" +
+        '<td class="' + (p <= 0 ? "neg" : "") + '">' + money(p) + "</td>" +
+        '<td class="' + (pb === null ? "neg" : "") + '">' + showMonths(pb) + "</td>" +
+        "</tr>";
+    }).join("");
+    document.getElementById("scnBody").innerHTML = scn;
 
     save();
     renderCompare();
   }
 
-  // ---------- 입력 포맷 ----------
-  IDS.forEach(function(id){
+  // 입력 포맷
+  MONEY_IDS.forEach(function(id){
     var input = el[id];
     input.addEventListener("input", function(){
-      var raw = String(input.value).replace(/[^0-9]/g,"");
-      raw = raw.replace(/^0+(?=\d)/, "");
+      var raw = String(input.value).replace(/[^0-9]/g,"").replace(/^0+(?=\d)/, "");
       input.value = raw === "" ? "" : comma(parseInt(raw, 10));
       render();
     });
     input.addEventListener("blur", function(){
-      if(input.value === "") { input.value = "0"; render(); }
+      if(input.value === ""){ input.value = "0"; render(); }
     });
   });
+  rentVat.addEventListener("change", render);
+  rampMonths.addEventListener("input", render);
+  rampRate.addEventListener("input", render);
 
-  // ---------- 저장 ----------
-  var KEY = "beautyshop-calc-v1";
-  var SLOTS = "beautyshop-calc-slots-v1";
-
+  // 저장
+  var KEY = "beautyshop-calc-v2", SLOTS = "beautyshop-calc-slots-v2";
   function save(){
-    try{
-      var v = read();
-      localStorage.setItem(KEY, JSON.stringify(v));
-    }catch(e){}
+    try{ localStorage.setItem(KEY, JSON.stringify(read())); }catch(e){}
   }
   function restore(){
     try{
       var raw = localStorage.getItem(KEY);
       if(!raw) return;
       var v = JSON.parse(raw);
-      IDS.forEach(function(id){
+      MONEY_IDS.forEach(function(id){
         if(typeof v[id] === "number") el[id].value = comma(v[id]);
       });
+      if(typeof v.rentVat === "boolean") rentVat.checked = v.rentVat;
+      if(typeof v.rampMonths === "number") rampMonths.value = v.rampMonths;
+      if(typeof v.rampRate === "number") rampRate.value = Math.round(v.rampRate * 100);
     }catch(e){}
   }
   function getSlots(){
     try{
-      var raw = localStorage.getItem(SLOTS);
-      var arr = raw ? JSON.parse(raw) : [];
+      var arr = JSON.parse(localStorage.getItem(SLOTS) || "[]");
       return Array.isArray(arr) ? arr : [];
     }catch(e){ return []; }
   }
-  function setSlots(arr){
-    try{ localStorage.setItem(SLOTS, JSON.stringify(arr)); }catch(e){}
-  }
+  function setSlots(a){ try{ localStorage.setItem(SLOTS, JSON.stringify(a)); }catch(e){} }
 
   document.getElementById("saveBtn").addEventListener("click", function(){
     var arr = getSlots();
-    if(arr.length >= 3){
-      alert("매물은 3개까지 저장할 수 있어요. 하나 지우고 다시 저장해주세요.");
-      return;
-    }
+    if(arr.length >= 3){ alert("매물은 3개까지 저장할 수 있어요. 하나 지우고 다시 저장해주세요."); return; }
     var name = prompt("이 매물을 뭐라고 부를까요?", "매물 " + String.fromCharCode(65 + arr.length));
     if(name === null) return;
-    name = name.trim() || ("매물 " + String.fromCharCode(65 + arr.length));
-    arr.push({ name: name.slice(0, 14), v: read() });
+    name = (name.trim() || ("매물 " + String.fromCharCode(65 + arr.length))).slice(0, 14);
+    arr.push({ name: name, v: read() });
     setSlots(arr);
     renderCompare();
   });
-
   document.getElementById("clearBtn").addEventListener("click", function(){
     if(getSlots().length === 0) return;
-    if(confirm("저장한 매물을 전부 지울까요?")){
-      setSlots([]);
-      renderCompare();
-    }
+    if(confirm("저장한 매물을 전부 지울까요?")){ setSlots([]); renderCompare(); }
   });
 
   function renderCompare(){
-    var area = document.getElementById("cmpArea");
-    var arr = getSlots();
+    var area = document.getElementById("cmpArea"), arr = getSlots();
     if(arr.length === 0){
       area.innerHTML = '<p class="empty">아직 저장한 매물이 없어요. 숫자를 채우고 “지금 숫자 저장”을 눌러보세요.</p>';
       return;
     }
     var rows = arr.map(function(s, i){
       var d = derive(s.v);
-      var pb = months(d.payback);
       return "<tr>" +
-        "<td>" + escapeHtml(s.name) + ' <button class="del" data-i="' + i + '" aria-label="' + escapeHtml(s.name) + ' 삭제">삭제</button></td>' +
-        "<td>" + money(d.totalInit) + "</td>" +
+        "<td>" + esc(s.name) + ' <button class="del" data-i="' + i + '" aria-label="' + esc(s.name) + ' 삭제">삭제</button></td>' +
+        "<td>" + money(d.need) + "</td>" +
         "<td>" + money(d.unrec) + "</td>" +
-        "<td>" + (d.profit < 0 ? "-" : "") + money(Math.abs(d.profit)) + "</td>" +
-        "<td>" + (pb === null ? "회수 불가" : pb.toFixed(1) + "개월") + "</td>" +
+        '<td class="' + (d.steady <= 0 ? "neg" : "") + '">' + money(d.steady) + "</td>" +
+        '<td class="' + (d.payback === null ? "neg" : "") + '">' + showMonths(d.payback) + "</td>" +
         "</tr>";
     }).join("");
-
-    area.innerHTML =
-      '<div class="cmp-scroll"><table>' +
-      "<thead><tr><th>매물</th><th>총 초기 투자금</th><th>못 돌려받는 돈</th><th>월 순이익</th><th>회수 기간</th></tr></thead>" +
+    area.innerHTML = '<div class="scroll-x"><table class="cmp">' +
+      "<thead><tr><th>매물</th><th>진짜 필요한 돈</th><th>못 돌려받는 돈</th><th>월 순이익</th><th>회수 기간</th></tr></thead>" +
       "<tbody>" + rows + "</tbody></table></div>";
-
     Array.prototype.forEach.call(area.querySelectorAll(".del"), function(btn){
       btn.addEventListener("click", function(){
-        var arr2 = getSlots();
-        arr2.splice(parseInt(btn.dataset.i, 10), 1);
-        setSlots(arr2);
+        var a = getSlots();
+        a.splice(parseInt(btn.dataset.i, 10), 1);
+        setSlots(a);
         renderCompare();
       });
-    });
-  }
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, function(c){
-      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
     });
   }
 

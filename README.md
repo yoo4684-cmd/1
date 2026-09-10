@@ -9,7 +9,7 @@
 | --- | --- |
 | [`docs/01-positioning.md`](docs/01-positioning.md) | 계정 포지셔닝 · 콘텐츠 공식 · 소재 풀 |
 | [`docs/02-reels-01-premium.md`](docs/02-reels-01-premium.md) | 릴스 #1 대본 (권리금 3,800 → 600만원) |
-| [`docs/03-checklist.md`](docs/03-checklist.md) | 상가 체크리스트 (항목 하나씩 작업 중) |
+| [`docs/03-checklist.md`](docs/03-checklist.md) | 상가 체크리스트 전체 초안 (챕터 0~7) |
 | [`calculator/index.html`](calculator/index.html) | 뷰티샵 창업비용 계산기 |
 
 ## 창업비용 계산기
@@ -25,7 +25,10 @@
 
 수정하려면 `calculator/index.html` 을 고친 뒤 같은 URL로 다시 배포하면 됨.
 
-## 작업 원칙
+## 체크리스트 (노션)
 
-체크리스트는 한 번에 완성하지 않는다.
-**항목 하나 제안 → 넣기 / 빼기 / 수정 결정 → 다음 항목** 순서로 진행한다.
+전체 초안을 노션 페이지로 올려뒀다. 항목별로 넣기/빼기/수정을 표시하면서 검토한다.
+
+**https://app.notion.com/p/3d73060fff2381579e71d38191c84c29**
+
+레포의 `docs/03-checklist.md` 와 같은 내용이다.
