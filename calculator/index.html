@@ -1,0 +1,808 @@
+<title>뷰티샵 창업비용 계산기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --paper:#FBF7F5;
+    --surface:#FFFFFF;
+    --surface-2:#F5EEEB;
+    --ink:#221B1D;
+    --ink-2:#5C4E51;
+    --ink-3:#8B7B7E;
+    --line:#E6DAD7;
+    --line-strong:#D2BFBB;
+    --accent:#7A2E4E;
+    --accent-ink:#7A2E4E;
+    --accent-soft:#F5E3EA;
+    --on-accent:#FFFFFF;
+    --good:#2C6E52;
+    --good-soft:#E2F0E8;
+    --warn:#8F5C0C;
+    --warn-soft:#F7EBD6;
+    --bad:#A6392E;
+    --bad-soft:#F8E3DF;
+    --shadow:0 1px 2px rgba(58,32,38,.06), 0 8px 24px -12px rgba(58,32,38,.18);
+    --radius:14px;
+    --sans:"IBM Plex Sans KR", system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    --serif:"Gowun Batang", "Nanum Myeongjo", Georgia, serif;
+    --mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#171314;
+      --surface:#201A1C;
+      --surface-2:#2A2225;
+      --ink:#F2EAEC;
+      --ink-2:#C3B2B6;
+      --ink-3:#938286;
+      --line:#392E31;
+      --line-strong:#4E4044;
+      --accent:#E39BB6;
+      --accent-ink:#E39BB6;
+      --accent-soft:#3A242E;
+      --on-accent:#231016;
+      --good:#78CBA2;
+      --good-soft:#1E332A;
+      --warn:#E2AC55;
+      --warn-soft:#352A18;
+      --bad:#F0907F;
+      --bad-soft:#3A2320;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#171314;
+    --surface:#201A1C;
+    --surface-2:#2A2225;
+    --ink:#F2EAEC;
+    --ink-2:#C3B2B6;
+    --ink-3:#938286;
+    --line:#392E31;
+    --line-strong:#4E4044;
+    --accent:#E39BB6;
+    --accent-ink:#E39BB6;
+    --accent-soft:#3A242E;
+      --on-accent:#231016;
+    --good:#78CBA2;
+    --good-soft:#1E332A;
+    --warn:#E2AC55;
+    --warn-soft:#352A18;
+    --bad:#F0907F;
+    --bad-soft:#3A2320;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.65;
+    word-break:keep-all;
+    overflow-wrap:break-word;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:680px;
+    margin:0 auto;
+    padding-inline:20px;
+    padding-block:36px 64px;
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+  }
+
+  /* ---------- header ---------- */
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent-ink);
+    font-weight:600;
+    margin:0;
+  }
+  h1{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:clamp(25px,6.2vw,38px);
+    line-height:1.3;
+    margin:8px 0 0;
+    text-wrap:balance;
+    letter-spacing:-.01em;
+  }
+  .lede{
+    margin:12px 0 0;
+    color:var(--ink-2);
+    font-size:15px;
+    max-width:34em;
+  }
+  .lede strong{color:var(--ink);font-weight:600}
+
+  /* ---------- panels ---------- */
+  .panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  .panel > h2{
+    margin:0 0 4px;
+    font-size:16px;
+    font-weight:600;
+    letter-spacing:-.01em;
+  }
+  .panel > .hint{
+    margin:0 0 16px;
+    font-size:13px;
+    color:var(--ink-3);
+  }
+
+  /* ---------- inputs ---------- */
+  .fields{display:flex;flex-direction:column;gap:2px}
+  .field{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:9px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .fields .field:last-child{border-bottom:0;padding-bottom:0}
+  .field label{
+    font-size:14px;
+    color:var(--ink-2);
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .field .sub{display:block;font-size:11.5px;color:var(--ink-3);line-height:1.4}
+  .money{
+    display:flex;
+    align-items:baseline;
+    gap:5px;
+    flex:0 0 auto;
+  }
+  .money input{
+    width:6.6em;
+    text-align:right;
+    font-family:var(--mono);
+    font-variant-numeric:tabular-nums;
+    font-size:15px;
+    font-weight:500;
+    color:var(--ink);
+    background:var(--surface-2);
+    border:1px solid transparent;
+    border-radius:8px;
+    padding:6px 9px;
+  }
+  .money input:hover{border-color:var(--line-strong)}
+  .money input:focus{
+    outline:none;
+    border-color:var(--accent);
+    box-shadow:0 0 0 3px var(--accent-soft);
+    background:var(--surface);
+  }
+  .money input:focus-visible{outline:none}
+  .money .unit{font-size:12.5px;color:var(--ink-3);flex:0 0 auto}
+
+  /* ---------- receipt ---------- */
+  .receipt{
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:18px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:1px;
+  }
+  .rrow{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    padding:6px 0;
+    font-size:14px;
+  }
+  .rrow .k{color:var(--ink-2);flex:0 0 auto}
+  .rrow .dots{
+    flex:1 1 auto;
+    border-bottom:1px dotted var(--line-strong);
+    transform:translateY(-4px);
+    min-width:12px;
+  }
+  .rrow .v{
+    flex:0 0 auto;
+    font-family:var(--mono);
+    font-variant-numeric:tabular-nums;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .rrow.total{
+    margin-top:8px;
+    padding-top:12px;
+    border-top:1.5px solid var(--line-strong);
+    font-size:15px;
+  }
+  .rrow.total .k{color:var(--ink);font-weight:600}
+  .rrow.total .v{font-weight:600;font-size:17px}
+  .rrow.sub .k,.rrow.sub .v{color:var(--ink-3);font-size:13px}
+  .rrow .v.neg{color:var(--bad)}
+
+  .receipt-head{
+    font-size:11.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--ink-3);
+    font-weight:600;
+    margin:0 0 6px;
+  }
+  .receipt + .receipt{margin-top:12px}
+
+  /* ---------- hero result ---------- */
+  .hero{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    box-shadow:var(--shadow);
+  }
+  .hero-label{
+    font-size:13px;
+    color:var(--ink-2);
+    margin:0;
+  }
+  .hero-number{
+    font-family:var(--mono);
+    font-variant-numeric:tabular-nums;
+    font-weight:600;
+    font-size:clamp(40px,11vw,56px);
+    line-height:1.05;
+    letter-spacing:-.02em;
+    margin:6px 0 0;
+    color:var(--ink);
+    display:flex;
+    align-items:baseline;
+    gap:6px;
+    flex-wrap:wrap;
+  }
+  .hero-number .u{font-size:20px;font-weight:500;color:var(--ink-2);font-family:var(--sans)}
+  .hero-note{
+    margin:10px 0 0;
+    font-size:13.5px;
+    color:var(--ink-2);
+  }
+  .hero-note b{font-family:var(--mono);font-weight:600;color:var(--ink)}
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12.5px;
+    font-weight:600;
+    padding:3px 10px;
+    border-radius:999px;
+    margin-top:12px;
+  }
+  .pill::before{
+    content:"";
+    width:7px;height:7px;border-radius:50%;
+    background:currentColor;
+    flex:0 0 auto;
+  }
+  .pill.good{color:var(--good);background:var(--good-soft)}
+  .pill.warn{color:var(--warn);background:var(--warn-soft)}
+  .pill.bad{color:var(--bad);background:var(--bad-soft)}
+
+  /* ---------- timeline ---------- */
+  .timeline{margin-top:22px}
+  .tl-title{
+    font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--ink-3);font-weight:600;margin:0 0 10px;
+  }
+  .tl-track{
+    position:relative;
+    height:10px;
+    background:var(--surface-2);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .tl-fill{
+    position:absolute;inset:0 auto 0 0;
+    background:var(--accent);
+    border-radius:999px;
+    width:0;
+    transition:width .35s ease;
+  }
+  .tl-ticks{
+    position:relative;
+    height:16px;
+    margin-top:6px;
+  }
+  .tl-tick{
+    position:absolute;
+    top:0;
+    transform:translateX(-50%);
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-3);
+    white-space:nowrap;
+  }
+  .tl-tick:first-child{transform:translateX(0)}
+  .tl-tick:last-child{transform:translateX(-100%)}
+  @media (prefers-reduced-motion: reduce){
+    .tl-fill{transition:none}
+  }
+
+  /* ---------- callout ---------- */
+  .callout{
+    border-left:3px solid var(--accent);
+    background:var(--accent-soft);
+    border-radius:0 10px 10px 0;
+    padding:14px 16px;
+  }
+  .callout p{margin:0;font-size:13.5px;color:var(--ink-2);line-height:1.7}
+  .callout p + p{margin-top:8px}
+  .callout .quote{
+    font-family:var(--serif);
+    font-size:15px;
+    color:var(--ink);
+    line-height:1.65;
+  }
+  .callout b{color:var(--ink);font-weight:600}
+
+  /* ---------- compare ---------- */
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  button{
+    font-family:inherit;
+    font-size:13.5px;
+    font-weight:500;
+    padding:8px 14px;
+    border-radius:9px;
+    border:1px solid var(--line-strong);
+    background:var(--surface);
+    color:var(--ink);
+    cursor:pointer;
+  }
+  button:hover{background:var(--surface-2)}
+  button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+  button.primary:hover{filter:brightness(1.08)}
+  button.ghost{border-style:dashed;color:var(--ink-2)}
+
+  .cmp-scroll{overflow-x:auto;margin-top:14px}
+  table{border-collapse:collapse;width:100%;min-width:420px;font-size:13px}
+  th,td{
+    text-align:right;
+    padding:9px 10px;
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+  th:first-child,td:first-child{text-align:left}
+  thead th{
+    font-size:11.5px;
+    letter-spacing:.06em;
+    color:var(--ink-3);
+    font-weight:600;
+    border-bottom:1.5px solid var(--line-strong);
+  }
+  tbody td{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--ink);word-break:normal}
+  tbody td:first-child{font-family:var(--sans);color:var(--ink);font-weight:500}
+  tbody tr:last-child td{border-bottom:0}
+  td .del{
+    font-family:var(--sans);
+    font-size:11px;
+    color:var(--ink-3);
+    border:0;background:none;padding:2px 4px;cursor:pointer;
+  }
+  td .del:hover{color:var(--bad)}
+  .empty{color:var(--ink-3);font-size:13px;margin:14px 0 0}
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding-top:22px;
+    color:var(--ink-3);
+    font-size:13px;
+  }
+  footer p{margin:0 0 8px}
+  footer .sig{font-family:var(--serif);color:var(--ink-2);font-size:14px}
+
+  .badge{
+    display:inline-block;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.04em;
+    color:var(--accent-ink);
+    background:var(--accent-soft);
+    padding:2px 8px;
+    border-radius:6px;
+    vertical-align:middle;
+    margin-left:6px;
+  }
+
+  @media (max-width:430px){
+    .field{flex-wrap:wrap;gap:4px}
+    .field label{flex:1 1 100%}
+    .money{margin-left:auto}
+    .money input{width:7.2em}
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">계약 전 30초</p>
+    <h1>마음에 드는 매장이어도<br>계약 전 숫자부터 확인하세요</h1>
+    <p class="lede">
+      매물 보러 가서 <strong>바로 계산해보라고</strong> 만든 계산기예요.
+      아래 숫자는 예시라서, 지금 보고 있는 매물 숫자로 바꿔서 써보시면 돼요.
+      단위는 전부 <strong>만원</strong>입니다.
+    </p>
+  </header>
+
+  <section class="panel">
+    <h2>초기 투자금</h2>
+    <p class="hint">계약할 때 한 번에 나가는 돈이에요.</p>
+    <div class="fields">
+      <div class="field">
+        <label for="deposit">보증금<span class="sub">나갈 때 돌려받는 돈</span></label>
+        <span class="money"><input id="deposit" inputmode="numeric" value="1,000"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="premium">권리금<span class="sub">나갈 때 그대로 받는다는 보장이 없는 돈</span></label>
+        <span class="money"><input id="premium" inputmode="numeric" value="2,000"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="interior">인테리어<span class="sub">철거·전기 공사까지 포함해서</span></label>
+        <span class="money"><input id="interior" inputmode="numeric" value="1,500"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="equipment">장비 / 집기<span class="sub">기계, 베드, 가구, 초도 재료</span></label>
+        <span class="money"><input id="equipment" inputmode="numeric" value="500"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="etcInit">기타 초기비용<span class="sub">간판, 중개수수료, 인허가, 오픈 홍보</span></label>
+        <span class="money"><input id="etcInit" inputmode="numeric" value="200"><span class="unit">만원</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>매달 나가는 돈</h2>
+    <p class="hint">손님이 한 명도 안 와도 나가는 돈이 고정비예요.</p>
+    <div class="fields">
+      <div class="field">
+        <label for="rent">월세<span class="sub">부가세 별도인지 꼭 확인하세요</span></label>
+        <span class="money"><input id="rent" inputmode="numeric" value="120"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="maintenance">관리비<span class="sub">공용 전기·수도 포함 여부 확인</span></label>
+        <span class="money"><input id="maintenance" inputmode="numeric" value="15"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="etcFixed">기타 월 고정비<span class="sub">보험, 프로그램, 대출 이자, 광고비</span></label>
+        <span class="money"><input id="etcFixed" inputmode="numeric" value="30"><span class="unit">만원</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>예상 매출</h2>
+    <p class="hint">기존 매출을 그대로 믿지 말고, 보수적으로 잡아보세요.</p>
+    <div class="fields">
+      <div class="field">
+        <label for="revenue">예상 월매출<span class="sub">카드 수수료 빼기 전 금액</span></label>
+        <span class="money"><input id="revenue" inputmode="numeric" value="800"><span class="unit">만원</span></span>
+      </div>
+      <div class="field">
+        <label for="variable">월 변동비<span class="sub">재료비, 직원 급여, 카드 수수료</span></label>
+        <span class="money"><input id="variable" inputmode="numeric" value="250"><span class="unit">만원</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="hero" aria-live="polite">
+    <p class="hero-label">투자금 회수까지</p>
+    <p class="hero-number"><span id="paybackNum">13.5</span><span class="u">개월</span></p>
+    <span class="pill good" id="statusPill">회수 기간 양호</span>
+    <p class="hero-note" id="heroNote"></p>
+
+    <div class="timeline">
+      <p class="tl-title">회수 시점</p>
+      <div class="tl-track"><div class="tl-fill" id="tlFill"></div></div>
+      <div class="tl-ticks">
+        <span class="tl-tick" style="left:0%">0</span>
+        <span class="tl-tick" style="left:20%">12개월</span>
+        <span class="tl-tick" style="left:40%">24개월</span>
+        <span class="tl-tick" style="left:60%">36개월</span>
+        <span class="tl-tick" style="left:80%">48개월</span>
+        <span class="tl-tick" style="left:100%">60개월</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>계산 내역</h2>
+    <p class="hint">숫자를 눈으로 한 번 훑어보세요.</p>
+
+    <div class="receipt">
+      <p class="receipt-head">한 번에 나가는 돈</p>
+      <div class="rrow"><span class="k">보증금</span><span class="dots"></span><span class="v" id="rDeposit"></span></div>
+      <div class="rrow"><span class="k">권리금</span><span class="dots"></span><span class="v" id="rPremium"></span></div>
+      <div class="rrow"><span class="k">인테리어 · 장비 · 기타</span><span class="dots"></span><span class="v" id="rRest"></span></div>
+      <div class="rrow total"><span class="k">총 초기 투자금</span><span class="dots"></span><span class="v" id="rTotalInit"></span></div>
+      <div class="rrow sub"><span class="k">이 중 돌려받기 어려운 돈</span><span class="dots"></span><span class="v" id="rUnrec"></span></div>
+    </div>
+
+    <div class="receipt">
+      <p class="receipt-head">매달 도는 돈</p>
+      <div class="rrow"><span class="k">예상 월매출</span><span class="dots"></span><span class="v" id="rRevenue"></span></div>
+      <div class="rrow"><span class="k">월 고정비</span><span class="dots"></span><span class="v" id="rFixed"></span></div>
+      <div class="rrow"><span class="k">월 변동비</span><span class="dots"></span><span class="v" id="rVariable"></span></div>
+      <div class="rrow total"><span class="k">예상 월 순이익</span><span class="dots"></span><span class="v" id="rProfit"></span></div>
+      <div class="rrow sub"><span class="k">매출이 이만큼은 나와야 본전</span><span class="dots"></span><span class="v" id="rBreakeven"></span></div>
+    </div>
+  </section>
+
+  <section class="callout">
+    <p class="quote">“권리금은 나갈 때 그대로 받는 돈이 아니에요.”</p>
+    <p>
+      지금 매물의 권리금은 초기 투자금의 <b id="premiumShare">38%</b>예요.
+      제 첫 가게는 권리금 <b>3,800만원</b>을 주고 들어가서,
+      3년 뒤에 <b>600만원</b>을 받고 나왔어요.
+    </p>
+    <p>
+      그래서 보증금을 뺀 <b id="unrecInline">4,200만원</b>은
+      <b>돌아오지 않는다고 생각하고</b> 계산하는 게 안전해요.
+      그 기준으로 보면 회수까지 <b id="paybackUnrec">10.9개월</b>이 걸려요.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>매물 비교하기<span class="badge">최대 3개</span></h2>
+    <p class="hint">마음에 드는 매물이 있어도 최소 3개는 비교해보세요. 저장한 값은 이 브라우저에만 남아요.</p>
+    <div class="btnrow">
+      <button class="primary" id="saveBtn">지금 숫자 저장</button>
+      <button class="ghost" id="clearBtn">전체 지우기</button>
+    </div>
+    <div id="cmpArea"></div>
+  </section>
+
+  <footer>
+    <p>이 계산기는 계약 전에 숫자를 한 번 더 보게 하려고 만든 도구예요. 세금과 대출 이자, 매출이 자리 잡기까지 걸리는 시간은 빠져 있으니 실제로는 더 넉넉하게 잡으셔야 해요.</p>
+    <p class="sig">23살에 아무것도 모르고 사장부터 해본 사람이 만들었습니다.</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var IDS = ["deposit","premium","interior","equipment","etcInit","rent","maintenance","etcFixed","revenue","variable"];
+  var el = {};
+  IDS.forEach(function(id){ el[id] = document.getElementById(id); });
+
+  function num(v){
+    var n = parseInt(String(v).replace(/[^0-9]/g,""), 10);
+    return isNaN(n) ? 0 : n;
+  }
+  function comma(n){ return n.toLocaleString("ko-KR"); }
+
+  // 만원 단위 정수를 한국식 금액 문자열로
+  function money(man){
+    if(man === 0) return "0원";
+    var eok = Math.floor(man / 10000);
+    var rest = man % 10000;
+    if(eok > 0 && rest > 0) return comma(eok) + "억 " + comma(rest) + "만원";
+    if(eok > 0) return comma(eok) + "억원";
+    return comma(man) + "만원";
+  }
+
+  function read(){
+    var v = {};
+    IDS.forEach(function(id){ v[id] = num(el[id].value); });
+    return v;
+  }
+
+  function derive(v){
+    var totalInit = v.deposit + v.premium + v.interior + v.equipment + v.etcInit;
+    var unrec = v.premium + v.interior + v.equipment + v.etcInit;
+    var fixed = v.rent + v.maintenance + v.etcFixed;
+    var profit = v.revenue - fixed - v.variable;
+    return {
+      totalInit: totalInit,
+      unrec: unrec,
+      rest: v.interior + v.equipment + v.etcInit,
+      fixed: fixed,
+      profit: profit,
+      breakeven: fixed + v.variable,
+      premiumShare: totalInit > 0 ? Math.round(v.premium / totalInit * 100) : 0,
+      payback: profit > 0 ? totalInit / profit : null,
+      paybackUnrec: profit > 0 ? unrec / profit : null
+    };
+  }
+
+  function months(m){
+    if(m === null) return null;
+    return Math.round(m * 10) / 10;
+  }
+
+  function setText(id, text){
+    var node = document.getElementById(id);
+    if(node) node.textContent = text;
+  }
+
+  function render(){
+    var v = read();
+    var d = derive(v);
+
+    setText("rDeposit", money(v.deposit));
+    setText("rPremium", money(v.premium));
+    setText("rRest", money(d.rest));
+    setText("rTotalInit", money(d.totalInit));
+    setText("rUnrec", money(d.unrec));
+    setText("rRevenue", money(v.revenue));
+    setText("rFixed", money(d.fixed));
+    setText("rVariable", money(v.variable));
+    setText("rBreakeven", "월 " + money(d.breakeven));
+
+    var profitNode = document.getElementById("rProfit");
+    profitNode.textContent = (d.profit < 0 ? "-" : "") + money(Math.abs(d.profit));
+    profitNode.classList.toggle("neg", d.profit <= 0);
+
+    setText("premiumShare", d.premiumShare + "%");
+    setText("unrecInline", money(d.unrec));
+
+    var pb = months(d.payback);
+    var pbu = months(d.paybackUnrec);
+    var pill = document.getElementById("statusPill");
+    var note = document.getElementById("heroNote");
+    var fill = document.getElementById("tlFill");
+    var numNode = document.getElementById("paybackNum");
+    var unitNode = document.querySelector(".hero-number .u");
+
+    if(pb === null){
+      numNode.textContent = "회수 불가";
+      unitNode.style.display = "none";
+      pill.className = "pill bad";
+      pill.textContent = "월 순이익이 0원 이하예요";
+      note.innerHTML = "지금 숫자대로면 매달 <b>" + money(Math.abs(d.profit)) + "</b>씩 손해예요. 매출을 올리든 고정비를 낮추든, 이 매물은 숫자부터 다시 봐야 해요.";
+      fill.style.width = "100%";
+      fill.style.background = "var(--bad)";
+      setText("paybackUnrec", "계산 불가");
+    } else {
+      numNode.textContent = pb >= 100 ? Math.round(pb) : pb.toFixed(1);
+      unitNode.style.display = "";
+      fill.style.background = "var(--accent)";
+      fill.style.width = Math.min(100, pb / 60 * 100).toFixed(1) + "%";
+
+      if(pb <= 18){
+        pill.className = "pill good";
+        pill.textContent = "회수 기간 양호";
+      } else if(pb <= 36){
+        pill.className = "pill warn";
+        pill.textContent = "회수까지 3년 안쪽";
+      } else {
+        pill.className = "pill bad";
+        pill.textContent = "회수까지 3년 넘게 걸려요";
+      }
+
+      note.innerHTML = "초기 투자금 <b>" + money(d.totalInit) + "</b>을 월 순이익 <b>" +
+        money(d.profit) + "</b>으로 나눈 단순 계산이에요. 매출이 자리 잡기까지 걸리는 시간은 빠져 있어요.";
+      setText("paybackUnrec", pbu.toFixed(1) + "개월");
+    }
+
+    save();
+    renderCompare();
+  }
+
+  // ---------- 입력 포맷 ----------
+  IDS.forEach(function(id){
+    var input = el[id];
+    input.addEventListener("input", function(){
+      var raw = String(input.value).replace(/[^0-9]/g,"");
+      raw = raw.replace(/^0+(?=\d)/, "");
+      input.value = raw === "" ? "" : comma(parseInt(raw, 10));
+      render();
+    });
+    input.addEventListener("blur", function(){
+      if(input.value === "") { input.value = "0"; render(); }
+    });
+  });
+
+  // ---------- 저장 ----------
+  var KEY = "beautyshop-calc-v1";
+  var SLOTS = "beautyshop-calc-slots-v1";
+
+  function save(){
+    try{
+      var v = read();
+      localStorage.setItem(KEY, JSON.stringify(v));
+    }catch(e){}
+  }
+  function restore(){
+    try{
+      var raw = localStorage.getItem(KEY);
+      if(!raw) return;
+      var v = JSON.parse(raw);
+      IDS.forEach(function(id){
+        if(typeof v[id] === "number") el[id].value = comma(v[id]);
+      });
+    }catch(e){}
+  }
+  function getSlots(){
+    try{
+      var raw = localStorage.getItem(SLOTS);
+      var arr = raw ? JSON.parse(raw) : [];
+      return Array.isArray(arr) ? arr : [];
+    }catch(e){ return []; }
+  }
+  function setSlots(arr){
+    try{ localStorage.setItem(SLOTS, JSON.stringify(arr)); }catch(e){}
+  }
+
+  document.getElementById("saveBtn").addEventListener("click", function(){
+    var arr = getSlots();
+    if(arr.length >= 3){
+      alert("매물은 3개까지 저장할 수 있어요. 하나 지우고 다시 저장해주세요.");
+      return;
+    }
+    var name = prompt("이 매물을 뭐라고 부를까요?", "매물 " + String.fromCharCode(65 + arr.length));
+    if(name === null) return;
+    name = name.trim() || ("매물 " + String.fromCharCode(65 + arr.length));
+    arr.push({ name: name.slice(0, 14), v: read() });
+    setSlots(arr);
+    renderCompare();
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    if(getSlots().length === 0) return;
+    if(confirm("저장한 매물을 전부 지울까요?")){
+      setSlots([]);
+      renderCompare();
+    }
+  });
+
+  function renderCompare(){
+    var area = document.getElementById("cmpArea");
+    var arr = getSlots();
+    if(arr.length === 0){
+      area.innerHTML = '<p class="empty">아직 저장한 매물이 없어요. 숫자를 채우고 “지금 숫자 저장”을 눌러보세요.</p>';
+      return;
+    }
+    var rows = arr.map(function(s, i){
+      var d = derive(s.v);
+      var pb = months(d.payback);
+      return "<tr>" +
+        "<td>" + escapeHtml(s.name) + ' <button class="del" data-i="' + i + '" aria-label="' + escapeHtml(s.name) + ' 삭제">삭제</button></td>' +
+        "<td>" + money(d.totalInit) + "</td>" +
+        "<td>" + money(d.unrec) + "</td>" +
+        "<td>" + (d.profit < 0 ? "-" : "") + money(Math.abs(d.profit)) + "</td>" +
+        "<td>" + (pb === null ? "회수 불가" : pb.toFixed(1) + "개월") + "</td>" +
+        "</tr>";
+    }).join("");
+
+    area.innerHTML =
+      '<div class="cmp-scroll"><table>' +
+      "<thead><tr><th>매물</th><th>총 초기 투자금</th><th>못 돌려받는 돈</th><th>월 순이익</th><th>회수 기간</th></tr></thead>" +
+      "<tbody>" + rows + "</tbody></table></div>";
+
+    Array.prototype.forEach.call(area.querySelectorAll(".del"), function(btn){
+      btn.addEventListener("click", function(){
+        var arr2 = getSlots();
+        arr2.splice(parseInt(btn.dataset.i, 10), 1);
+        setSlots(arr2);
+        renderCompare();
+      });
+    });
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+
+  restore();
+  render();
+})();
+</script>
