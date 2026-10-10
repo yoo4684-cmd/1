@@ -7,6 +7,7 @@
 
 | 경로 | 내용 |
 | --- | --- |
+| [`docs/00-facts.md`](docs/00-facts.md) | **확정 사실 · 숫자** (충돌 시 이 파일 기준) |
 | [`docs/01-positioning.md`](docs/01-positioning.md) | 계정 포지셔닝 · 콘텐츠 공식 · 소재 풀 |
 | [`docs/02-reels-01-premium.md`](docs/02-reels-01-premium.md) | (이전안) 릴스 #1 대본 — 존댓말 단독 영상 버전 |
 | [`docs/04-reels-series-chaechae.md`](docs/04-reels-series-chaechae.md) | **채채 계정 스토리텔링 릴스 3부작 — 가게 양도 편** |
@@ -28,7 +29,8 @@
 
 ## 릴스 3부작 (노션)
 
-채채 계정 스토리텔링 릴스 3편 연작. EP.1 대본 확정, EP.2·3 구성안.
+채채 계정 스토리텔링 릴스 3편 연작 — 결과 · 원인 · 변화 구조.
+구조 평가, 3편 대본, 3부작 이후 운영, 프로필 세팅, 수익화 단계.
 
 **https://app.notion.com/p/3f53060fff238136a97de520dc99fcb9**
 
