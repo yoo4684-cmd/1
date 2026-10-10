@@ -8,7 +8,8 @@
 | 경로 | 내용 |
 | --- | --- |
 | [`docs/01-positioning.md`](docs/01-positioning.md) | 계정 포지셔닝 · 콘텐츠 공식 · 소재 풀 |
-| [`docs/02-reels-01-premium.md`](docs/02-reels-01-premium.md) | 릴스 #1 대본 (권리금 3,800 → 600만원) |
+| [`docs/02-reels-01-premium.md`](docs/02-reels-01-premium.md) | (이전안) 릴스 #1 대본 — 존댓말 단독 영상 버전 |
+| [`docs/04-reels-series-chaechae.md`](docs/04-reels-series-chaechae.md) | **채채 계정 스토리텔링 릴스 3부작 — 가게 양도 편** |
 | [`docs/03-checklist.md`](docs/03-checklist.md) | 상가 체크리스트 전체 초안 (챕터 0~7) |
 | [`calculator/index.html`](calculator/index.html) | 뷰티샵 창업비용 계산기 |
 
@@ -24,6 +25,12 @@
 - 입력값은 브라우저에만 저장되고 서버로 안 넘어감
 
 수정하려면 `calculator/index.html` 을 고친 뒤 같은 URL로 다시 배포하면 됨.
+
+## 릴스 3부작 (노션)
+
+채채 계정 스토리텔링 릴스 3편 연작. EP.1 대본 확정, EP.2·3 구성안.
+
+**https://app.notion.com/p/3f53060fff238136a97de520dc99fcb9**
 
 ## 체크리스트 (노션)
 
