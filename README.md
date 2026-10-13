@@ -12,12 +12,15 @@
 | [`docs/02-reels-01-premium.md`](docs/02-reels-01-premium.md) | (이전안) 릴스 #1 대본 — 존댓말 단독 영상 버전 |
 | [`docs/03-checklist.md`](docs/03-checklist.md) | 상가 체크리스트 전체 초안 (챕터 0~7) |
 | [`docs/04-reels-series-chaechae.md`](docs/04-reels-series-chaechae.md) | (보류) 채채 릴스 3부작 — 결과 · 원인 · 변화 |
-| [`docs/05-content-calendar.md`](docs/05-content-calendar.md) | 주간 콘텐츠 운영 계획 (릴스 3 + 카드뉴스 1) |
+| [`docs/05-content-calendar.md`](docs/05-content-calendar.md) | (대체됨) 주간 콘텐츠 운영 계획 — 주 4개 안 |
 | [`docs/06-reels-framework.md`](docs/06-reels-framework.md) | 스토리텔링 릴스 프레임워크 (대본 검토 기준) |
 | [`docs/07-first-reels.md`](docs/07-first-reels.md) | **첫 릴스 — 채채 소개편** (진행 중) |
 | [`docs/08-content-backlog.md`](docs/08-content-backlog.md) | **콘텐츠 소재 풀** (아이디어 쌓는 곳) |
 | [`docs/09-product-content.md`](docs/09-product-content.md) | 제품(가림막) 제작 과정 콘텐츠 계획 |
-| [`docs/10-besi-funding.md`](docs/10-besi-funding.md) | **BESI 가림막 — 와디즈 펀딩 콘텐츠 전략** |
+| [`docs/10-besi-funding.md`](docs/10-besi-funding.md) | BESI 가림막 — 와디즈 펀딩 콘텐츠 전략 |
+| [`docs/11-channel-decision.md`](docs/11-channel-decision.md) | 판매 채널 결정 — 와디즈 vs 스마트스토어 예약주문 |
+| [`docs/12-import-cost.md`](docs/12-import-cost.md) | 수입 물류비 견적 분석 (웨이하이 → 인천 LCL) |
+| [`docs/13-30days-10k.md`](docs/13-30days-10k.md) | **30일 1만 팔로워 플랜** ← 현재 운영 기준 |
 | [`calculator/index.html`](calculator/index.html) | 뷰티샵 창업비용 계산기 |
 
 ## 창업비용 계산기
@@ -52,9 +55,17 @@
 
 **https://app.notion.com/p/3f53060fff238136a97de520dc99fcb9**
 
-## 콘텐츠 운영 계획 (노션)
+## 30일 1만 팔로워 플랜 ← 현재 운영 기준
+
+주 6 릴스 + 1 카드뉴스 = 30일 30개. A/B/C 난이도 분리, 터졌을 때 24시간 매뉴얼,
+전환 구조 체크리스트 포함. 아래 '콘텐츠 운영 계획(주 4개 안)'을 대체한다.
+
+**https://app.notion.com/p/3f83060fff23813286cdefb48c3925cc**
+
+## 콘텐츠 운영 계획 (노션) · 대체됨
 
 주 4개(릴스 3 + 카드뉴스 1) 4주 플랜. 왁싱샵 가림막 제품 콘텐츠 포함.
+→ `docs/13-30days-10k.md` 로 대체됨. 소재 아이디어 참고용으로만 본다.
 
 **https://app.notion.com/p/3f73060fff2381c7bca8c837e3d16712**
 
