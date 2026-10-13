@@ -15,6 +15,7 @@
 | [`docs/05-content-calendar.md`](docs/05-content-calendar.md) | 주간 콘텐츠 운영 계획 (릴스 3 + 카드뉴스 1) |
 | [`docs/06-reels-framework.md`](docs/06-reels-framework.md) | 스토리텔링 릴스 프레임워크 (대본 검토 기준) |
 | [`docs/07-first-reels.md`](docs/07-first-reels.md) | **첫 릴스 — 채채 소개편** (진행 중) |
+| [`docs/08-content-backlog.md`](docs/08-content-backlog.md) | **콘텐츠 소재 풀** (아이디어 쌓는 곳) |
 | [`calculator/index.html`](calculator/index.html) | 뷰티샵 창업비용 계산기 |
 
 ## 창업비용 계산기
@@ -29,6 +30,10 @@
 - 입력값은 브라우저에만 저장되고 서버로 안 넘어감
 
 수정하려면 `calculator/index.html` 을 고친 뒤 같은 URL로 다시 배포하면 됨.
+
+## 콘텐츠 소재 풀 (노션)
+
+**https://app.notion.com/p/3f83060fff2381bfa50bcf03cbc346a8**
 
 ## 첫 릴스 — 소개편 (노션) · 진행 중
 
