@@ -11,8 +11,10 @@
 | [`docs/01-positioning.md`](docs/01-positioning.md) | 계정 포지셔닝 · 콘텐츠 공식 · 소재 풀 |
 | [`docs/02-reels-01-premium.md`](docs/02-reels-01-premium.md) | (이전안) 릴스 #1 대본 — 존댓말 단독 영상 버전 |
 | [`docs/03-checklist.md`](docs/03-checklist.md) | 상가 체크리스트 전체 초안 (챕터 0~7) |
-| [`docs/04-reels-series-chaechae.md`](docs/04-reels-series-chaechae.md) | **채채 릴스 3부작 — 결과 · 원인 · 변화** |
+| [`docs/04-reels-series-chaechae.md`](docs/04-reels-series-chaechae.md) | (보류) 채채 릴스 3부작 — 결과 · 원인 · 변화 |
 | [`docs/05-content-calendar.md`](docs/05-content-calendar.md) | 주간 콘텐츠 운영 계획 (릴스 3 + 카드뉴스 1) |
+| [`docs/06-reels-framework.md`](docs/06-reels-framework.md) | 스토리텔링 릴스 프레임워크 (대본 검토 기준) |
+| [`docs/07-first-reels.md`](docs/07-first-reels.md) | **첫 릴스 — 채채 소개편** (진행 중) |
 | [`calculator/index.html`](calculator/index.html) | 뷰티샵 창업비용 계산기 |
 
 ## 창업비용 계산기
