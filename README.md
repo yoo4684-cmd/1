@@ -20,7 +20,7 @@
 | [`docs/10-besi-funding.md`](docs/10-besi-funding.md) | BESI 가림막 — 와디즈 펀딩 콘텐츠 전략 |
 | [`docs/11-channel-decision.md`](docs/11-channel-decision.md) | 판매 채널 결정 — 와디즈 vs 스마트스토어 예약주문 |
 | [`docs/12-import-cost.md`](docs/12-import-cost.md) | 수입 물류비 견적 분석 (웨이하이 → 인천 LCL) |
-| [`docs/13-30days-10k.md`](docs/13-30days-10k.md) | **30일 1만 팔로워 플랜** ← 현재 운영 기준 |
+| [`docs/13-30days-10k.md`](docs/13-30days-10k.md) | **30일 콘텐츠 계획 — 자동DM 중심** ← 현재 운영 기준 |
 | [`calculator/index.html`](calculator/index.html) | 뷰티샵 창업비용 계산기 |
 
 ## 창업비용 계산기
@@ -55,10 +55,12 @@
 
 **https://app.notion.com/p/3f53060fff238136a97de520dc99fcb9**
 
-## 30일 1만 팔로워 플랜 ← 현재 운영 기준
+## 30일 콘텐츠 계획 — 자동DM 중심 ← 현재 운영 기준
 
-주 6 릴스 + 1 카드뉴스 = 30일 30개. A/B/C 난이도 분리, 터졌을 때 24시간 매뉴얼,
-전환 구조 체크리스트 포함. 아래 '콘텐츠 운영 계획(주 4개 안)'을 대체한다.
+엔진: 정보 → 댓글 키워드 → 자동DM 자료 → 팔로우 + 명단.
+타깃은 뷰티샵 창업 초보 하나. 창업 순서대로 주 1개씩 자료를 풀고,
+그 주 릴스 3개가 전부 같은 자료로 수렴한다. 제품 과정은 금요일 릴스 + 스토리.
+아래 '콘텐츠 운영 계획(주 4개 안)'을 대체한다.
 
 **https://app.notion.com/p/3f83060fff23813286cdefb48c3925cc**
 
