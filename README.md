@@ -17,6 +17,7 @@
 | [`docs/07-first-reels.md`](docs/07-first-reels.md) | **첫 릴스 — 채채 소개편** (진행 중) |
 | [`docs/08-content-backlog.md`](docs/08-content-backlog.md) | **콘텐츠 소재 풀** (아이디어 쌓는 곳) |
 | [`docs/09-product-content.md`](docs/09-product-content.md) | 제품(가림막) 제작 과정 콘텐츠 계획 |
+| [`docs/10-besi-funding.md`](docs/10-besi-funding.md) | **BESI 가림막 — 와디즈 펀딩 콘텐츠 전략** |
 | [`calculator/index.html`](calculator/index.html) | 뷰티샵 창업비용 계산기 |
 
 ## 창업비용 계산기
