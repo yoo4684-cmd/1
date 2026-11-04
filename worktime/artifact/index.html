@@ -138,7 +138,7 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 
     <section class="card">
       <div class="month-mini">
-        <div><div class="sub" id="myMonthLabel">이번 달 누적 근무</div><div class="big" id="myMonthTotal">0시간</div></div>
+        <div><div class="sub" id="myMonthLabel">이번 달 누적 근무</div><div class="big" id="myMonthTotal">0시간 0분</div></div>
         <div class="sub" id="myMonthDays">0일 근무</div>
       </div>
     </section>
@@ -159,10 +159,10 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
         <button id="nextM" aria-label="다음 달">›</button>
       </div>
       <div class="stats">
-        <div class="stat"><div class="k">총 근무</div><div class="v" id="sTotal">0시간</div></div>
+        <div class="stat"><div class="k">총 근무</div><div class="v" id="sTotal">0시간 0분</div></div>
         <div class="stat"><div class="k">근무일</div><div class="v" id="sDays">0일</div></div>
         <div class="stat"><div class="k">하루 평균</div><div class="v" id="sAvg">-</div></div>
-        <div class="stat"><div class="k">총 휴식</div><div class="v" id="sBreak">0분</div></div>
+        <div class="stat"><div class="k">총 휴식</div><div class="v" id="sBreak">0시간 0분</div></div>
       </div>
       <div class="cal" id="cal"></div>
       <div class="legend">적음 <i style="background:var(--bg)"></i><i id="lg1"></i><i id="lg2"></i><i id="lg3"></i> 많음</div>
@@ -201,6 +201,7 @@ const hms = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${pad(
 const hm = ts => { const d = new Date(ts); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
 const durM = m => { m = Math.round(m); return m >= 60 ? `${Math.floor(m / 60)}시간${m % 60 ? ' ' + (m % 60) + '분' : ''}` : `${m}분`; };
 const dur = ms => durM(ms / 60000);
+const hmK = m => { m = Math.round(m); return `${Math.floor(m / 60)}시간 ${m % 60}분`; };
 const hhmm = m => `${Math.floor(m / 60)}:${pad(Math.round(m) % 60)}`;
 const ymd = ts => { const d = new Date(ts); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
 const parse = (s, d) => { try { return s ? JSON.parse(s) : d; } catch { return d; } };
@@ -328,7 +329,7 @@ function renderMonthMini() {
   const n = new Date(), list = monthRecords(n.getFullYear(), n.getMonth());
   const total = list.reduce((a, r) => a + (r.workMinutes || 0), 0);
   $('myMonthLabel').textContent = `${n.getMonth() + 1}월 누적 근무`;
-  $('myMonthTotal').textContent = durM(total);
+  $('myMonthTotal').textContent = hmK(total);
   $('myMonthDays').textContent = `${Object.keys(byDay(list)).length}일 근무`;
 }
 function note(t) { $('note').textContent = t; $('adminNote').textContent = t; }
@@ -444,10 +445,10 @@ function renderAdmin() {
   const brk = list.reduce((a, r) => a + (r.breakMinutes || 0), 0);
   const nDays = Object.keys(days).length;
   $('mLabel').textContent = `${viewY}년 ${viewM + 1}월`;
-  $('sTotal').textContent = durM(total);
+  $('sTotal').textContent = hmK(total);
   $('sDays').textContent = `${nDays}일`;
-  $('sAvg').textContent = nDays ? durM(total / nDays) : '-';
-  $('sBreak').textContent = durM(brk);
+  $('sAvg').textContent = nDays ? hmK(total / nDays) : '-';
+  $('sBreak').textContent = hmK(brk);
 
   const cal = $('cal'); cal.replaceChildren();
   ['일', '월', '화', '수', '목', '금', '토'].forEach((d, i) => { const e = document.createElement('div'); e.className = 'dow' + (i === 0 ? ' sun' : i === 6 ? ' sat' : ''); e.textContent = d; cal.append(e); });
