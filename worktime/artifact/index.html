@@ -124,6 +124,19 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 .live-row:first-child{border-top:0;padding-top:0}
 .live-row .when{color:var(--muted);font-size:13px;font-weight:400;width:100%;padding-left:17px;font-variant-numeric:tabular-nums}
 .live-row .when:empty{display:none}
+.pay-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:12px}
+.pay-head h2{margin:0}
+.pay-head small{color:var(--muted);font-size:13px}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pay-box{background:var(--soft);border-radius:12px;padding:12px}
+.pay-box .k{font-size:12px;color:var(--muted)}
+.pay-box .won{font-size:20px;font-weight:700;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.pay-box .s{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pay-box.main{background:var(--accent);color:#fff}
+.pay-box.main .k,.pay-box.main .s{color:rgb(255 255 255/.8)}
+.pay-note{font-size:12px;color:var(--muted);margin:10px 0 0}
+.paybar{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--soft);border-radius:12px;padding:10px 12px;margin:-8px 0 16px;font-size:14px}
+.paybar b{font-variant-numeric:tabular-nums}
 </style>
 
 <main class="wrap">
@@ -200,6 +213,15 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
       <div id="liveList"></div>
     </section>
 
+    <section class="card" id="payCard">
+      <div class="pay-head"><h2>혜린 님 급여</h2><small id="payRate"></small></div>
+      <div class="pay">
+        <div class="pay-box main"><div class="k" id="payNextLabel">다음 급여일</div><div class="won" id="payNextWon">0원</div><div class="s" id="payNextSub"></div></div>
+        <div class="pay-box"><div class="k" id="payNowLabel">이번 달 누적</div><div class="won" id="payNowWon">0원</div><div class="s" id="payNowSub"></div></div>
+      </div>
+      <p class="pay-note">매월 5일에 전월 근무분을 지급해요. 실근무 시간(휴식 제외) × 시급으로 계산하며, 주휴수당·공제는 포함하지 않았어요.</p>
+    </section>
+
     <section class="card">
       <div class="chips" id="chips"></div>
       <div class="mnav">
@@ -213,6 +235,7 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
         <div class="stat"><div class="k">하루 평균</div><div class="v" id="sAvg">-</div></div>
         <div class="stat"><div class="k">총 휴식</div><div class="v" id="sBreak">0시간 0분</div></div>
       </div>
+      <div class="paybar" id="monthPay" hidden></div>
       <div class="cal" id="cal"></div>
       <div class="legend">적음 <i style="background:var(--bg)"></i><i id="lg1"></i><i id="lg2"></i><i id="lg3"></i> 많음</div>
     </section>
@@ -246,10 +269,12 @@ const DATA_SOURCE = 'f69c00e4-f3c6-4181-a914-727f5ad53039'; // 노션 'BESY 근�
 const COMPANY = 'BESY';
 // 사람 목록 — PIN은 원문 대신 해시로만 보관 (간단한 화면 잠금용)
 const PEOPLE = {
-  hyerin:  { name: '혜린', stateDoc: 'current', admin: false, pin: '7e4e376060748aa0a95e42b87e8c144274aa5b4c2c0a955b5d2c14700f317eca' },
+  hyerin:  { name: '혜린', stateDoc: 'current', admin: false, wage: 11000, pin: '7e4e376060748aa0a95e42b87e8c144274aa5b4c2c0a955b5d2c14700f317eca' },
   yujeong: { name: '유정', stateDoc: 'yujeong', admin: true,  pin: '7dc8379e20146918d89f6458cdfee8a56342a71c501bf03dafdc2c00a6e7c41b' },
 };
 const KEYS = Object.keys(PEOPLE);
+const PAYDAY = 5; // 매월 5일 급여일 (전월 근무분 지급)
+const won = n => Math.round(n).toLocaleString('ko-KR') + '원';
 
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
@@ -511,6 +536,29 @@ function renderLive() {
 const heat = m => m <= 0 ? 'var(--bg)' : `color-mix(in srgb, var(--accent) ${Math.round(12 + Math.min(m / 540, 1) * 48)}%, var(--card))`;
 $('lg1').style.background = heat(120); $('lg2').style.background = heat(300); $('lg3').style.background = heat(540);
 
+// 그 달에 진행 중인 근무(아직 퇴근 전) 시간
+function monthLiveMinutes(k, y, m) {
+  const s = states[k].session;
+  return s && ymd(s.start).startsWith(`${y}-${pad(m + 1)}-`) ? workMs(s) / 60000 : 0;
+}
+const monthMinutes = (k, y, m) => monthRecords(k, y, m).reduce((a, r) => a + (r.workMinutes || 0), 0) + monthLiveMinutes(k, y, m);
+function renderPay() {
+  const k = 'hyerin', wage = PEOPLE[k].wage, n = new Date();
+  $('payRate').textContent = `시급 ${won(wage)}`;
+  // 다음 급여일: 오늘이 5일 이전(포함)이면 이번 달 5일, 아니면 다음 달 5일 → 그 전달 근무분
+  const pd = n.getDate() <= PAYDAY ? new Date(n.getFullYear(), n.getMonth(), PAYDAY) : new Date(n.getFullYear(), n.getMonth() + 1, PAYDAY);
+  const wm = new Date(pd.getFullYear(), pd.getMonth() - 1, 1);
+  const dLeft = Math.round((new Date(pd.getFullYear(), pd.getMonth(), pd.getDate()) - new Date(n.getFullYear(), n.getMonth(), n.getDate())) / 86400000);
+  const m1 = monthMinutes(k, wm.getFullYear(), wm.getMonth());
+  $('payNextLabel').textContent = `다음 급여일 ${pd.getMonth() + 1}월 ${PAYDAY}일` + (dLeft === 0 ? ' (오늘)' : ` (D-${dLeft})`);
+  $('payNextWon').textContent = won(m1 / 60 * wage);
+  $('payNextSub').textContent = `${wm.getMonth() + 1}월 근무 ${hmK(m1)}`;
+  const m2 = monthMinutes(k, n.getFullYear(), n.getMonth());
+  $('payNowLabel').textContent = `${n.getMonth() + 1}월 누적 (오늘까지)`;
+  $('payNowWon').textContent = won(m2 / 60 * wage);
+  $('payNowSub').textContent = `${hmK(m2)} 근무`;
+}
+
 function renderAdmin() {
   if ($('view-admin').hidden) return;
   renderLive();
@@ -529,6 +577,16 @@ function renderAdmin() {
   $('sDays').textContent = `${nDays}일`;
   $('sAvg').textContent = nDays ? hmK(total / nDays) : '-';
   $('sBreak').textContent = hmK(brk);
+  renderPay();
+  const wage = PEOPLE[adminWho].wage;
+  $('monthPay').hidden = !wage;
+  if (wage) {
+    const pd = new Date(viewY, viewM + 1, PAYDAY);
+    const liveM = monthLiveMinutes(adminWho, viewY, viewM);
+    $('monthPay').innerHTML = '<span></span><b></b>';
+    $('monthPay').firstChild.textContent = `${viewM + 1}월 급여 (${pd.getMonth() + 1}월 ${PAYDAY}일 지급)`;
+    $('monthPay').lastChild.textContent = won((total + liveM) / 60 * wage);
+  }
 
   const cal = $('cal'); cal.replaceChildren();
   ['일', '월', '화', '수', '목', '금', '토'].forEach((d, i) => { const e = document.createElement('div'); e.className = 'dow' + (i === 0 ? ' sun' : i === 6 ? ' sat' : ''); e.textContent = d; cal.append(e); });
