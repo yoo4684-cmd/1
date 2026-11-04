@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BESY 근무기록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div class="brand">BESY</div>
+    <div class="who"><span class="dot" id="dot"></span><span id="employee">혜린</span> 님</div>
+  </header>
+
+  <section class="card clock">
+    <div class="today" id="today"></div>
+    <div class="status" id="statusText">출근 전</div>
+    <div class="timer" id="timer">00:00:00</div>
+    <div class="meta">
+      <div><span>출근</span><b id="startAt">--:--</b></div>
+      <div><span>휴식</span><b id="breakTime">0분</b></div>
+    </div>
+
+    <div class="buttons">
+      <button id="btnStart" class="btn primary">근무 시작</button>
+      <button id="btnPause" class="btn">일시정지</button>
+      <button id="btnEnd" class="btn danger">퇴근</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>최근 기록</h2>
+    <ul class="history" id="history"><li class="empty">아직 기록이 없어요.</li></ul>
+  </section>
+
+  <p class="notion-state" id="notionState"></p>
+</main>
+
+<dialog id="endDialog">
+  <form method="dialog" id="endForm">
+    <h3>오늘도 수고했어요, 혜린 님 👏</h3>
+    <p class="sum" id="endSummary"></p>
+    <label for="summary">오늘 한 일</label>
+    <textarea id="summary" rows="7" placeholder="- 고객 문의 응대&#10;- 상세페이지 수정&#10;- 다음 주 일정 정리" required></textarea>
+    <p class="err" id="endError"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn" id="btnCancel">계속 근무</button>
+      <button type="submit" class="btn primary" id="btnSave">저장하고 퇴근</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
