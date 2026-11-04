@@ -114,6 +114,16 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 .err{color:var(--danger);font-size:13px;min-height:1em;margin:8px 0 0}
 .acts{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:12px}
 @media (max-width:400px){.stats{grid-template-columns:repeat(2,1fr)}.timer{font-size:46px}.day{padding:4px}.day .h{font-size:11px}}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:16px}
+.tab{flex:1;font:inherit;font-weight:600;font-size:14px;padding:9px;border:0;border-radius:9px;background:none;color:var(--muted);cursor:pointer}
+.tab.on{background:var(--accent);color:#fff}
+.chips{display:flex;gap:6px;margin-bottom:14px}
+.chip{font:inherit;font-size:14px;font-weight:600;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--muted);cursor:pointer}
+.chip.on{background:var(--text);border-color:var(--text);color:var(--card)}
+.live-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:15px;font-weight:600;flex-wrap:wrap}
+.live-row:first-child{border-top:0;padding-top:0}
+.live-row .when{color:var(--muted);font-size:13px;font-weight:400;width:100%;padding-left:17px;font-variant-numeric:tabular-nums}
+.live-row .when:empty{display:none}
 </style>
 
 <main class="wrap">
@@ -124,8 +134,8 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
     <section class="card" id="pickBox">
       <h2>이름을 클릭하면 PIN 입력창이 나타납니다</h2>
       <div class="pick">
-        <button class="pick-btn" data-role="employee"><span class="ico">👩‍💼</span><b>혜린 님</b><small>근무 기록하기</small></button>
-        <button class="pick-btn" data-role="admin"><span class="ico">🗂️</span><b>관리자</b><small>기록 확인하기</small></button>
+        <button class="pick-btn" data-person="hyerin"><span class="ico">👩‍💼</span><b>혜린 님</b><small>근무 기록</small></button>
+        <button class="pick-btn" data-person="yujeong"><span class="ico">👩‍💻</span><b>유정 님</b><small>근무 기록 · 관리자</small></button>
       </div>
     </section>
     <section class="card" id="pinBox" hidden>
@@ -139,8 +149,13 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 
   <header class="top" id="topBar" hidden>
     <div class="brand">BESY</div>
-    <div class="who"><span class="dot" id="dot"></span><b id="whoName">혜린</b> 님<button class="link" id="btnLogout">로그아웃</button></div>
+    <div class="who"><span class="dot" id="dot"></span><b id="whoName"></b> 님<button class="link" id="btnLogout">로그아웃</button></div>
   </header>
+
+  <nav class="tabs" id="tabs" hidden>
+    <button class="tab on" data-tab="work">내 근무</button>
+    <button class="tab" data-tab="admin">관리자</button>
+  </nav>
 
   <!-- ───────── 근무 화면 ───────── -->
   <div id="view-work" hidden>
@@ -181,10 +196,12 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
   <!-- ───────── 관리자 화면 ───────── -->
   <div id="view-admin" hidden>
     <section class="card">
-      <div class="live"><span class="dot" id="liveDot"></span><span id="liveText">혜린 님 · 출근 전</span><span class="when" id="liveWhen"></span></div>
+      <h2>지금 근무 상태</h2>
+      <div id="liveList"></div>
     </section>
 
     <section class="card">
+      <div class="chips" id="chips"></div>
       <div class="mnav">
         <button id="prevM" aria-label="이전 달">‹</button>
         <b id="mLabel"></b>
@@ -200,7 +217,7 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
       <div class="legend">적음 <i style="background:var(--bg)"></i><i id="lg1"></i><i id="lg2"></i><i id="lg3"></i> 많음</div>
     </section>
 
-    <section class="card detail" id="detail"><p class="empty">달력에서 날짜를 누르면 그날 기록을 볼 수 있어요.</p></section>
+    <section class="card detail" id="detail"></section>
 
     <section class="card" id="syncCard" hidden>
       <div class="syncbar"><span id="syncText"></span><button class="btn sm primary" id="btnSyncAll">노션에 저장</button></div>
@@ -212,7 +229,7 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 
 <div class="overlay" id="overlay">
   <form class="dlg" id="endForm">
-    <h3>오늘도 수고했어요, 혜린 님 👏</h3>
+    <h3 id="endTitle">오늘도 수고했어요 👏</h3>
     <p class="sum" id="endSummary"></p>
     <label for="summary">오늘 한 일</label>
     <textarea id="summary" rows="7" placeholder="- 고객 문의 응대&#10;- 상세페이지 수정&#10;- 다음 주 일정 정리"></textarea>
@@ -226,7 +243,14 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 
 <script>
 const DATA_SOURCE = 'f69c00e4-f3c6-4181-a914-727f5ad53039'; // 노션 'BESY 근무 기록'
-const EMPLOYEE = '혜린', COMPANY = 'BESY';
+const COMPANY = 'BESY';
+// 사람 목록 — PIN은 원문 대신 해시로만 보관 (간단한 화면 잠금용)
+const PEOPLE = {
+  hyerin:  { name: '혜린', stateDoc: 'current', admin: false, pin: '7e4e376060748aa0a95e42b87e8c144274aa5b4c2c0a955b5d2c14700f317eca' },
+  yujeong: { name: '유정', stateDoc: 'yujeong', admin: true,  pin: '7dc8379e20146918d89f6458cdfee8a56342a71c501bf03dafdc2c00a6e7c41b' },
+};
+const KEYS = Object.keys(PEOPLE);
+
 const $ = id => document.getElementById(id);
 const pad = n => String(n).padStart(2, '0');
 const hms = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`; };
@@ -243,28 +267,42 @@ const ls = {
 };
 
 // ───────── 상태 ─────────
-let session = ls.get('besy.session', null);   // {start, pauses:[{from,to}]}
-let todos = ls.get('besy.todos', []);          // [{id,text,done}]
-let records = ls.get('besy.records', []);      // 완료된 근무 기록
-let db = null, stateRef = null;
+// states[사람] = { session: {start, pauses:[{from,to}]} | null, todos: [{id,text,done}] }
+const states = {};
+KEYS.forEach(k => {
+  const legacy = k === 'hyerin'; // 예전 버전은 혜린 님 한 명용 키를 썼음
+  states[k] = {
+    session: ls.get('besy.session.' + k, legacy ? ls.get('besy.session', null) : null),
+    todos: ls.get('besy.todos.' + k, legacy ? ls.get('besy.todos', []) : []),
+  };
+});
+let records = ls.get('besy.records', []);
+let db = null;
+let me = null;                // 로그인한 사람 키
+let adminWho = 'hyerin';      // 관리자 화면에서 보는 사람
 let selDate = null;
 const now0 = new Date(); let viewY = now0.getFullYear(), viewM = now0.getMonth();
 
-// 예전 버전(v1) 기록 옮기기
 if (!records.length) {
   const old = ls.get('besy.history', []);
   if (old.length) records = old.map((r, i) => ({ ...r, id: 'old' + i + '-' + r.date }));
 }
+const mine = () => states[me];
+const nameOf = k => PEOPLE[k].name;
+const keyOfName = n => KEYS.find(k => PEOPLE[k].name === n) || 'hyerin';
 
-function saveLocal() { ls.set('besy.session', session); ls.set('besy.todos', todos); ls.set('besy.records', records); }
-
-let stateTimer = null;
-function saveState() {
+function saveLocal() {
+  KEYS.forEach(k => { ls.set('besy.session.' + k, states[k].session); ls.set('besy.todos.' + k, states[k].todos); });
+  ls.set('besy.records', records);
+}
+const stateTimers = {};
+function saveState(k = me) {
   saveLocal();
-  if (!stateRef) return;
-  clearTimeout(stateTimer);
-  stateTimer = setTimeout(() => {
-    stateRef.set({ session: session ? JSON.stringify(session) : '', todos: JSON.stringify(todos), updatedAt: Date.now() })
+  if (!db) return;
+  clearTimeout(stateTimers[k]);
+  stateTimers[k] = setTimeout(() => {
+    const s = states[k];
+    db.doc('state/' + PEOPLE[k].stateDoc).set({ session: s.session ? JSON.stringify(s.session) : '', todos: JSON.stringify(s.todos), updatedAt: Date.now() })
       .catch(e => note(dbErr(e)));
   }, 250);
 }
@@ -278,7 +316,7 @@ async function saveRecord(r) {
   }
 }
 function dbErr(e) {
-  if (e && (e.code === 'permission_denied' || e.code === 'not_granted')) return '⚠️ 기록할 권한이 없어요. 관리자에게 링크 권한(편집 가능)을 요청해 주세요.';
+  if (e && (e.code === 'permission_denied' || e.code === 'not_granted')) return '⚠️ 기록할 권한이 없어요. 링크 공유 권한을 확인해 주세요.';
   return '⚠️ 기록을 서버에 저장하지 못했어요. 인터넷 연결을 확인해 주세요. (이 기기에는 남아 있어요)';
 }
 
@@ -287,21 +325,23 @@ function dbErr(e) {
   const d = await claude.use('db');
   if (!d) return;
   db = d;
-  stateRef = db.doc('state/current');
   const loadTimer = setTimeout(() => note('⚠️ 기록을 불러오는 데 시간이 걸리고 있어요.'), 10000);
-  let firstState = true, firstRecords = true;
-  stateRef.onSnapshot(s => {
-    clearTimeout(loadTimer);
-    const v = s.exists ? s.data() : null;
-    if (v) { session = parse(v.session, null); todos = parse(v.todos, []); }
-    else if (firstState && (session || todos.length)) saveState(); // 이 기기에만 있던 상태 올리기
-    firstState = false;
-    saveLocal(); render(); renderTodos(); renderAdmin();
-  }, () => {});
+  KEYS.forEach(k => {
+    let first = true;
+    db.doc('state/' + PEOPLE[k].stateDoc).onSnapshot(s => {
+      clearTimeout(loadTimer);
+      const v = s.exists ? s.data() : null;
+      if (v) states[k] = { session: parse(v.session, null), todos: parse(v.todos, []) };
+      else if (first && (states[k].session || states[k].todos.length)) saveState(k); // 이 기기에만 있던 상태 올리기
+      first = false;
+      saveLocal(); renderAll();
+    }, () => {});
+  });
+  let firstRecords = true;
   db.collection('records').onSnapshot(snap => {
     clearTimeout(loadTimer);
     const remote = snap.docs.map(x => { const r = x.data(); return { ...r, id: x.id, todos: parse(r.todos, []) }; });
-    if (firstRecords && !remote.length && records.length) records.forEach(r => saveRecord(r).catch(() => {})); // 예전 기록 올리기
+    if (firstRecords && !remote.length && records.length) records.forEach(r => saveRecord(r).catch(() => {}));
     else records = remote.sort((a, b) => (b.endTs || 0) - (a.endTs || 0));
     firstRecords = false;
     saveLocal(); renderMonthMini(); renderAdmin();
@@ -309,20 +349,23 @@ function dbErr(e) {
 })();
 
 // ───────── 계산 ─────────
-const isPaused = () => !!(session && session.pauses.length && session.pauses.at(-1).to == null);
-const breakMs = (now = Date.now()) => session ? session.pauses.reduce((a, p) => a + ((p.to ?? now) - p.from), 0) : 0;
-const workMs = (now = Date.now()) => session ? now - session.start - breakMs(now) : 0;
-const stateName = () => !session ? 'idle' : isPaused() ? 'paused' : 'working';
-function monthRecords(y, m) { const pre = `${y}-${pad(m + 1)}-`; return records.filter(r => r.date && r.date.startsWith(pre)); }
+const isPaused = s => !!(s && s.pauses.length && s.pauses.at(-1).to == null);
+const breakMs = (s, now = Date.now()) => s ? s.pauses.reduce((a, p) => a + ((p.to ?? now) - p.from), 0) : 0;
+const workMs = (s, now = Date.now()) => s ? now - s.start - breakMs(s, now) : 0;
+const stateName = s => !s ? 'idle' : isPaused(s) ? 'paused' : 'working';
+const recsOf = k => records.filter(r => (r.employee || '혜린') === nameOf(k));
+function monthRecords(k, y, m) { const pre = `${y}-${pad(m + 1)}-`; return recsOf(k).filter(r => r.date && r.date.startsWith(pre)); }
 function byDay(list) { const o = {}; list.forEach(r => { (o[r.date] ||= []).push(r); }); return o; }
 
 // ───────── 근무 화면 ─────────
 function render() {
+  if (!me) return;
+  const s = mine().session;
   $('today').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-  $('timer').textContent = hms(workMs());
-  $('startAt').textContent = session ? hm(session.start) : '--:--';
-  $('breakTime').textContent = dur(breakMs());
-  const st = stateName();
+  $('timer').textContent = hms(workMs(s));
+  $('startAt').textContent = s ? hm(s.start) : '--:--';
+  $('breakTime').textContent = dur(breakMs(s));
+  const st = stateName(s);
   $('statusText').textContent = { idle: '출근 전', working: '근무 중', paused: '일시정지 중' }[st];
   $('dot').className = 'dot ' + st;
   $('btnStart').disabled = st !== 'idle';
@@ -334,7 +377,9 @@ function render() {
 }
 
 function renderTodos() {
+  if (!me) return;
   const ul = $('todos'); ul.replaceChildren();
+  const todos = mine().todos;
   const done = todos.filter(t => t.done).length;
   $('todoCount').textContent = todos.length ? `${done} / ${todos.length} 완료` : '';
   if (!todos.length) { const li = document.createElement('li'); li.className = 'empty'; li.textContent = '출근하면 오늘 할 일을 먼저 적어보세요.'; ul.append(li); return; }
@@ -344,19 +389,20 @@ function renderTodos() {
     cb.onchange = () => { t.done = cb.checked; saveState(); renderTodos(); };
     const sp = document.createElement('span'); sp.textContent = t.text;
     const x = document.createElement('button'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-label', '삭제');
-    x.onclick = () => { todos = todos.filter(o => o !== t); saveState(); renderTodos(); };
+    x.onclick = () => { mine().todos = mine().todos.filter(o => o !== t); saveState(); renderTodos(); };
     li.append(cb, sp, x); ul.append(li);
   });
 }
 $('todoForm').onsubmit = e => {
   e.preventDefault();
   const v = $('todoInput').value.trim(); if (!v) return;
-  todos.push({ id: Date.now().toString(36), text: v, done: false });
+  mine().todos.push({ id: Date.now().toString(36), text: v, done: false });
   $('todoInput').value = ''; saveState(); renderTodos();
 };
 
 function renderMonthMini() {
-  const n = new Date(), list = monthRecords(n.getFullYear(), n.getMonth());
+  if (!me) return;
+  const n = new Date(), list = monthRecords(me, n.getFullYear(), n.getMonth());
   const total = list.reduce((a, r) => a + (r.workMinutes || 0), 0);
   $('myMonthLabel').textContent = `${n.getMonth() + 1}월 누적 근무`;
   $('myMonthTotal').textContent = hmK(total);
@@ -409,17 +455,19 @@ async function pushToNotion(r) {
 }
 
 // ───────── 버튼 ─────────
-$('btnStart').onclick = () => { session = { start: Date.now(), pauses: [] }; saveState(); render(); };
+$('btnStart').onclick = () => { mine().session = { start: Date.now(), pauses: [] }; saveState(); render(); };
 $('btnPause').onclick = () => {
-  if (isPaused()) session.pauses.at(-1).to = Date.now();
-  else session.pauses.push({ from: Date.now(), to: null });
+  const s = mine().session;
+  if (isPaused(s)) s.pauses.at(-1).to = Date.now();
+  else s.pauses.push({ from: Date.now(), to: null });
   saveState(); render();
 };
 $('btnEnd').onclick = () => {
-  const now = Date.now();
-  $('endSummary').textContent = `출근 ${hm(session.start)} · 지금 ${hm(now)} · 실근무 ${dur(workMs(now))} · 휴식 ${dur(breakMs(now))}`;
+  const s = mine().session, now = Date.now();
+  $('endTitle').textContent = `오늘도 수고했어요, ${nameOf(me)} 님 👏`;
+  $('endSummary').textContent = `출근 ${hm(s.start)} · 지금 ${hm(now)} · 실근무 ${dur(workMs(s, now))} · 휴식 ${dur(breakMs(s, now))}`;
   $('endError').textContent = '';
-  if (!$('summary').value.trim()) $('summary').value = todos.filter(t => t.done).map(t => '- ' + t.text).join('\n');
+  if (!$('summary').value.trim()) $('summary').value = mine().todos.filter(t => t.done).map(t => '- ' + t.text).join('\n');
   $('overlay').classList.add('open'); $('summary').focus();
 };
 $('btnCancel').onclick = () => $('overlay').classList.remove('open');
@@ -428,89 +476,37 @@ $('endForm').onsubmit = async e => {
   e.preventDefault();
   const text = $('summary').value.trim();
   if (!text) { $('endError').textContent = '오늘 한 일을 적어주세요.'; return; }
-  const now = Date.now();
-  if (isPaused()) session.pauses.at(-1).to = now;
+  const st = mine(), s = st.session, now = Date.now();
+  if (isPaused(s)) s.pauses.at(-1).to = now;
   const r = {
-    id: `${ymd(session.start)}-${session.start}`, employee: EMPLOYEE, company: COMPANY, date: ymd(session.start),
-    startTs: session.start, endTs: now, startText: hm(session.start), endText: hm(now),
-    workMinutes: Math.round(workMs(now) / 60000), breakMinutes: Math.round(breakMs(now) / 60000),
-    summary: text, todos: todos.map(t => ({ text: t.text, done: !!t.done })), notionSaved: false, notionUrl: '',
+    id: `${me}-${ymd(s.start)}-${s.start}`, employee: nameOf(me), company: COMPANY, date: ymd(s.start),
+    startTs: s.start, endTs: now, startText: hm(s.start), endText: hm(now),
+    workMinutes: Math.round(workMs(s, now) / 60000), breakMinutes: Math.round(breakMs(s, now) / 60000),
+    summary: text, todos: st.todos.map(t => ({ text: t.text, done: !!t.done })), notionSaved: false, notionUrl: '',
   };
   $('btnSave').disabled = true; $('btnSave').textContent = '저장 중…';
   try { await saveRecord(r); } catch (err) { note(dbErr(err)); }
-  // 기록 완료 → 근무 종료, 못 끝낸 할 일은 내일로
-  session = null; todos = todos.filter(t => !t.done); saveState();
+  st.session = null; st.todos = st.todos.filter(t => !t.done); saveState(); // 못 끝낸 할 일은 내일로
   const fail = await pushToNotion(r);
   $('btnSave').disabled = false; $('btnSave').textContent = '저장하고 퇴근';
   if (fail) { $('endError').textContent = errorText(fail) + ' 기록은 남아 있고, 관리자 화면에서 다시 저장할 수 있어요.'; await new Promise(x => setTimeout(x, 2800)); }
   $('summary').value = ''; $('overlay').classList.remove('open');
   note(fail ? '⚠️ 근무 기록은 저장됐지만 노션 저장은 아직이에요.' : '✅ 노션까지 저장됐어요. 오늘도 수고 많았어요!');
-  render(); renderTodos(); renderMonthMini(); renderAdmin();
+  renderAll();
 };
-
-// ───────── 로그인 ─────────
-// 비밀번호는 원문 대신 해시로만 보관 (간단한 화면 잠금용)
-const PIN_HASH = {
-  admin: '7dc8379e20146918d89f6458cdfee8a56342a71c501bf03dafdc2c00a6e7c41b',
-  employee: '7e4e376060748aa0a95e42b87e8c144274aa5b4c2c0a955b5d2c14700f317eca',
-};
-const ROLE_NAME = { admin: '관리자', employee: '혜린' };
-let pickRole = null, pin = '';
-async function sha256(s) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
-  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
-}
-function showRole(role) {
-  $('view-login').hidden = !!role;
-  $('topBar').hidden = !role;
-  $('view-work').hidden = role !== 'employee';
-  $('view-admin').hidden = role !== 'admin';
-  $('dot').hidden = role !== 'employee';
-  if (role) $('whoName').textContent = ROLE_NAME[role];
-  if (!role) { $('pickBox').hidden = false; $('pinBox').hidden = true; }
-  render(); renderAdmin();
-}
-function drawPin() { [...$('pinDots').children].forEach((d, i) => d.classList.toggle('on', i < pin.length)); }
-async function pressKey(k) {
-  if (k === 'del') pin = pin.slice(0, -1);
-  else if (pin.length < 4) pin += k;
-  $('pinErr').textContent = ''; drawPin();
-  if (pin.length === 4) {
-    const ok = (await sha256('besy-pin:' + pin)) === PIN_HASH[pickRole];
-    if (ok) { ls.set('besy.role', pickRole); pin = ''; drawPin(); showRole(pickRole); }
-    else {
-      $('pinErr').textContent = 'PIN이 맞지 않아요.';
-      $('pinDots').classList.remove('shake'); void $('pinDots').offsetWidth; $('pinDots').classList.add('shake');
-      pin = ''; setTimeout(drawPin, 300);
-    }
-  }
-}
-['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k => {
-  const b = document.createElement('button'); b.type = 'button';
-  if (!k) { b.className = 'key ghost'; b.disabled = true; }
-  else { b.className = 'key' + (k === 'del' ? ' ghost' : ''); b.textContent = k === 'del' ? '지우기' : k; b.onclick = () => pressKey(k); }
-  $('keypad').append(b);
-});
-document.addEventListener('keydown', e => {
-  if ($('pinBox').hidden) return;
-  if (/^[0-9]$/.test(e.key)) pressKey(e.key);
-  else if (e.key === 'Backspace') pressKey('del');
-});
-document.querySelectorAll('.pick-btn').forEach(b => b.onclick = () => {
-  pickRole = b.dataset.role; pin = ''; drawPin(); $('pinErr').textContent = '';
-  $('pinWho').textContent = ROLE_NAME[pickRole] + (pickRole === 'employee' ? ' 님' : '');
-  $('pickBox').hidden = true; $('pinBox').hidden = false;
-});
-$('pinBack').onclick = () => { $('pickBox').hidden = false; $('pinBox').hidden = true; };
-$('btnLogout').onclick = () => { try { localStorage.removeItem('besy.role'); } catch {} showRole(null); };
 
 // ───────── 관리자 화면 ─────────
 function renderLive() {
   if ($('view-admin').hidden) return;
-  const st = stateName();
-  $('liveDot').className = 'dot ' + st;
-  $('liveText').textContent = `${EMPLOYEE} 님 · ` + { idle: '출근 전', working: '근무 중', paused: '휴식 중' }[st];
-  $('liveWhen').textContent = session ? `${hm(session.start)} 출근 · 실근무 ${hms(workMs())}` : '';
+  const box = $('liveList'); box.replaceChildren();
+  KEYS.forEach(k => {
+    const s = states[k].session, st = stateName(s);
+    const row = document.createElement('div'); row.className = 'live-row';
+    const dot = document.createElement('span'); dot.className = 'dot ' + st;
+    const t = document.createElement('span'); t.textContent = `${nameOf(k)} 님 · ` + { idle: '출근 전', working: '근무 중', paused: '휴식 중' }[st];
+    const w = document.createElement('span'); w.className = 'when'; w.textContent = s ? `${hm(s.start)} 출근 · 실근무 ${hms(workMs(s))}` : '';
+    row.append(dot, t, w); box.append(row);
+  });
 }
 const heat = m => m <= 0 ? 'var(--bg)' : `color-mix(in srgb, var(--accent) ${Math.round(12 + Math.min(m / 540, 1) * 48)}%, var(--card))`;
 $('lg1').style.background = heat(120); $('lg2').style.background = heat(300); $('lg3').style.background = heat(540);
@@ -518,7 +514,13 @@ $('lg1').style.background = heat(120); $('lg2').style.background = heat(300); $(
 function renderAdmin() {
   if ($('view-admin').hidden) return;
   renderLive();
-  const list = monthRecords(viewY, viewM), days = byDay(list);
+  const chips = $('chips'); chips.replaceChildren();
+  KEYS.forEach(k => {
+    const c = document.createElement('button'); c.className = 'chip' + (k === adminWho ? ' on' : ''); c.textContent = nameOf(k);
+    c.onclick = () => { adminWho = k; selDate = null; renderAdmin(); };
+    chips.append(c);
+  });
+  const list = monthRecords(adminWho, viewY, viewM), days = byDay(list);
   const total = list.reduce((a, r) => a + (r.workMinutes || 0), 0);
   const brk = list.reduce((a, r) => a + (r.breakMinutes || 0), 0);
   const nDays = Object.keys(days).length;
@@ -532,12 +534,12 @@ function renderAdmin() {
   ['일', '월', '화', '수', '목', '금', '토'].forEach((d, i) => { const e = document.createElement('div'); e.className = 'dow' + (i === 0 ? ' sun' : i === 6 ? ' sat' : ''); e.textContent = d; cal.append(e); });
   const first = new Date(viewY, viewM, 1).getDay(), last = new Date(viewY, viewM + 1, 0).getDate();
   for (let i = 0; i < first; i++) { const e = document.createElement('div'); e.className = 'day blank'; cal.append(e); }
-  const todayStr = ymd(Date.now());
+  const todayStr = ymd(Date.now()), ls_ = states[adminWho].session;
   for (let d = 1; d <= last; d++) {
     const ds = `${viewY}-${pad(viewM + 1)}-${pad(d)}`, dow = (first + d - 1) % 7;
     let mins = (days[ds] || []).reduce((a, r) => a + (r.workMinutes || 0), 0);
-    const live = session && ymd(session.start) === ds;
-    if (live) mins += workMs() / 60000;
+    const live = ls_ && ymd(ls_.start) === ds;
+    if (live) mins += workMs(ls_) / 60000;
     const b = document.createElement('button');
     b.className = 'day' + (dow === 0 ? ' sun' : dow === 6 ? ' sat' : '') + (ds === todayStr ? ' today' : '') + (ds === selDate ? ' sel' : '') + (live ? ' live' : '');
     b.style.background = heat(mins);
@@ -556,13 +558,12 @@ function renderDetail() {
   const box = $('detail'); box.replaceChildren();
   if (!selDate) { box.innerHTML = '<p class="empty">달력에서 날짜를 누르면 그날 기록을 볼 수 있어요.</p>'; return; }
   const [y, m, d] = selDate.split('-').map(Number);
-  const h = document.createElement('h2'); h.textContent = new Date(y, m - 1, d).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' });
+  const h = document.createElement('h2'); h.textContent = `${nameOf(adminWho)} 님 · ` + new Date(y, m - 1, d).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' });
   box.append(h);
-  const list = records.filter(r => r.date === selDate).sort((a, b) => a.startTs - b.startTs);
-  if (session && ymd(session.start) === selDate) {
-    const p = document.createElement('p'); p.className = 'txt'; p.textContent = `🟢 지금 근무 중 · ${hm(session.start)} 출근 · 실근무 ${dur(workMs())}`; box.append(p);
-  }
-  if (!list.length) { if (!(session && ymd(session.start) === selDate)) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = '이날은 근무 기록이 없어요.'; box.append(p); } return; }
+  const list = recsOf(adminWho).filter(r => r.date === selDate).sort((a, b) => (a.startTs || 0) - (b.startTs || 0));
+  const s = states[adminWho].session, liveHere = s && ymd(s.start) === selDate;
+  if (liveHere) { const p = document.createElement('p'); p.className = 'txt'; p.textContent = `🟢 지금 근무 중 · ${hm(s.start)} 출근 · 실근무 ${dur(workMs(s))}`; box.append(p); }
+  if (!list.length) { if (!liveHere) { const p = document.createElement('p'); p.className = 'empty'; p.textContent = '이날은 근무 기록이 없어요.'; box.append(p); } return; }
   list.forEach(r => {
     const div = document.createElement('div'); div.className = 'rec';
     div.innerHTML = `<div class="kv"><div>출근<b></b></div><div>퇴근<b></b></div><div>실근무<b></b></div></div>`;
@@ -596,12 +597,76 @@ $('btnSyncAll').onclick = async () => {
   renderAdmin();
 };
 
-render(); renderTodos(); renderMonthMini();
-showRole(PIN_HASH[ls.get('besy.role', null)] ? ls.get('besy.role', null) : null);
+// ───────── 탭 ─────────
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.dataset.tab === tab));
+  $('view-work').hidden = tab !== 'work';
+  $('view-admin').hidden = tab !== 'admin';
+  renderAll();
+}
+document.querySelectorAll('.tab').forEach(b => b.onclick = () => showTab(b.dataset.tab));
+
+// ───────── 로그인 ─────────
+let pickKey = null, pin = '';
+async function sha256(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function login(k) {
+  me = k;
+  $('view-login').hidden = !!k;
+  $('topBar').hidden = !k;
+  $('tabs').hidden = !(k && PEOPLE[k].admin);
+  if (!k) { $('view-work').hidden = $('view-admin').hidden = true; $('pickBox').hidden = false; $('pinBox').hidden = true; return; }
+  $('whoName').textContent = nameOf(k);
+  $('summary').value = '';
+  showTab('work');
+}
+function drawPin() { [...$('pinDots').children].forEach((d, i) => d.classList.toggle('on', i < pin.length)); }
+async function pressKey(k) {
+  if (k === 'del') pin = pin.slice(0, -1);
+  else if (pin.length < 4) pin += k;
+  $('pinErr').textContent = ''; drawPin();
+  if (pin.length === 4) {
+    const ok = (await sha256('besy-pin:' + pin)) === PEOPLE[pickKey].pin;
+    if (ok) { ls.set('besy.me', pickKey); pin = ''; drawPin(); login(pickKey); }
+    else {
+      $('pinErr').textContent = 'PIN이 맞지 않아요.';
+      $('pinDots').classList.remove('shake'); void $('pinDots').offsetWidth; $('pinDots').classList.add('shake');
+      pin = ''; setTimeout(drawPin, 300);
+    }
+  }
+}
+['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k => {
+  const b = document.createElement('button'); b.type = 'button';
+  if (!k) { b.className = 'key ghost'; b.disabled = true; }
+  else { b.className = 'key' + (k === 'del' ? ' ghost' : ''); b.textContent = k === 'del' ? '지우기' : k; b.onclick = () => pressKey(k); }
+  $('keypad').append(b);
+});
+document.addEventListener('keydown', e => {
+  if ($('pinBox').hidden || $('view-login').hidden) return;
+  if (/^[0-9]$/.test(e.key)) pressKey(e.key);
+  else if (e.key === 'Backspace') pressKey('del');
+});
+document.querySelectorAll('.pick-btn').forEach(b => b.onclick = () => {
+  pickKey = b.dataset.person; pin = ''; drawPin(); $('pinErr').textContent = '';
+  $('pinWho').textContent = nameOf(pickKey) + ' 님';
+  $('pickBox').hidden = true; $('pinBox').hidden = false;
+});
+$('pinBack').onclick = () => { $('pickBox').hidden = false; $('pinBox').hidden = true; };
+$('btnLogout').onclick = () => { try { localStorage.removeItem('besy.me'); localStorage.removeItem('besy.role'); } catch {} login(null); };
+
+function renderAll() { render(); renderTodos(); renderMonthMini(); renderAdmin(); }
+
+// 예전 로그인(혜린 님=employee, 관리자=admin) 이어받기
+const legacyRole = ls.get('besy.role', null);
+const saved = ls.get('besy.me', legacyRole === 'employee' ? 'hyerin' : legacyRole === 'admin' ? 'yujeong' : null);
+login(PEOPLE[saved] ? saved : null);
+
 let lastMin = -1;
 setInterval(() => {
   render();
   const m = new Date().getMinutes();
-  if (m !== lastMin) { lastMin = m; if (session) renderAdmin(); } // 근무 중이면 달력 오늘 칸을 1분마다 갱신
+  if (m !== lastMin) { lastMin = m; renderAdmin(); } // 근무 중인 날 칸을 1분마다 갱신
 }, 1000);
 </script>
