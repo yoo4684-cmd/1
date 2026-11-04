@@ -1,27 +1,32 @@
-# BESY 근무기록
+# BESY 근무기록 (웹사이트)
 
-혜린 님의 출퇴근·근무시간을 기록하고, 퇴근할 때 "오늘 한 일"을 Notion **BESY 근무 기록** 데이터베이스에 자동으로 저장하는 사이트입니다.
+Claude 로그인 없이 **주소만 열면 쓰는** 근무기록 사이트입니다.
 
-## 기능
-- **근무 시작**: 출근 시각을 기록하고 타이머를 시작합니다.
-- **일시정지 / 근무 재개**: 쉰 시간은 근무시간에서 자동으로 빠집니다.
-- **퇴근**: 오늘 한 일을 입력하고 저장하면 Notion에 한 줄(페이지)이 생깁니다.
-  - 속성: 이름, 날짜, 직원, 회사, 출근, 퇴근, 근무시간(분), 휴식시간(분), 오늘 한 일
-  - 페이지 본문: 근무 요약과 오늘 한 일(줄마다 글머리표)
-- 새로고침하거나 브라우저를 닫아도 진행 중인 근무는 그대로 남습니다(브라우저 저장소).
-- Notion 저장에 실패해도 기록은 기기에 남고, "최근 기록"에서 다시 시도할 수 있습니다.
+- 첫 화면: 이름을 누르고 PIN을 입력해요. (혜린 님 / 유정 님)
+- 혜린 님 화면: 근무 시작 · 일시정지 · 퇴근, 오늘 할 일, 이번 달 누적 근무
+- 유정 님 화면: 내 근무 + 관리자(실시간 근무 상태, 월별 달력·통계, 혜린 님 급여와 3.3% 원천세)
+- 모든 기록은 노션 「BESY 근무기록 사이트」 페이지 안의 두 표에 저장돼요.
+  - **BESY 근무 기록**: 퇴근할 때마다 한 줄씩 쌓여요.
+  - **BESY 근무 상태**: 지금 근무 중인지, 오늘 할 일이 저장돼요. 사이트가 알아서 관리해요.
 
-## Notion 연동 설정 (처음 한 번)
-1. https://www.notion.so/profile/integrations 에서 **새 통합(Internal integration)**을 만들고 토큰(`ntn_...`)을 복사합니다.
-2. Notion에서 **BESY 근무 기록** 데이터베이스를 열고, 오른쪽 위 `•••` → **연결(Connections)**에서 방금 만든 통합을 추가합니다.
-3. `.env.example`을 `.env`로 복사하고 `NOTION_TOKEN`에 토큰을 넣습니다. DB ID는 이미 들어 있습니다.
+## 올리는 방법 (Render, 무료)
+1. https://render.com 에서 GitHub로 로그인해요.
+2. **+ New → Web Service → Public Git Repository**에 `https://github.com/yoo4684-cmd/1`을 넣어요.
+3. 설정을 이렇게 채워요.
+   | 항목 | 값 |
+   |---|---|
+   | Branch | `claude/sharp-pascal-11hobw` |
+   | Root Directory | `worktime` |
+   | Build Command | `npm install` |
+   | Start Command | `npm start` |
+   | Instance Type | Free |
+4. Environment Variables에 `NOTION_TOKEN`(노션 통합 토큰)을 넣어요. `SECRET`(아무 긴 글자)은 넣어도 되고 안 넣어도 돼요.
+5. 노션에서 「BESY 근무기록 사이트」 페이지를 열고 `•••` → 연결에서 통합을 추가해요.
 
-## 실행
-Node.js 18 이상이면 되고, 따로 설치할 패키지는 없습니다.
+무료 서버는 한동안 안 쓰면 잠들어요. 그래서 처음 열 때 최대 1분 정도 걸릴 수 있어요.
+
+## 내 컴퓨터에서 실행
 ```bash
-cd worktime
 cp .env.example .env   # 토큰 입력
 npm start              # http://localhost:3000
 ```
-Notion 토큰이 브라우저에 보이지 않도록 서버(`server.js`)가 대신 Notion API를 호출합니다.
-Render나 Railway 같은 Node 호스팅에 올리면 휴대폰에서도 접속할 수 있습니다. 이때 환경변수에 `NOTION_TOKEN`, `NOTION_DATABASE_ID`를 설정하세요.
