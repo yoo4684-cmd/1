@@ -13,10 +13,27 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:'Noto Sans KR',
 .dot{width:9px;height:9px;border-radius:50%;background:var(--line);flex:none}
 .dot.working{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 22%,transparent)}
 .dot.paused{background:var(--warn)}
-.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:16px}
-.tabs[hidden]{display:none}
-.tab{flex:1;font:inherit;font-weight:600;font-size:14px;padding:9px;border:0;border-radius:9px;background:none;color:var(--muted);cursor:pointer}
-.tab.on{background:var(--accent);color:#fff}
+[hidden]{display:none!important}
+.link{font:inherit;font-size:13px;font-weight:500;border:0;background:none;color:var(--muted);cursor:pointer;text-decoration:underline;padding:4px}
+.login-brand{text-align:center;font-weight:700;font-size:34px;letter-spacing:.16em;margin-top:36px}
+.login-sub{text-align:center;color:var(--muted);margin:4px 0 28px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pick-btn{font:inherit;color:var(--text);background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:20px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px}
+.pick-btn:hover{border-color:var(--accent)}
+.pick-btn .ico{font-size:30px}
+.pick-btn b{font-size:16px}
+.pick-btn small{color:var(--muted);font-size:12px}
+.pin-help{color:var(--muted);font-size:14px;text-align:center;margin:0 0 14px}
+.pin-dots{display:flex;justify-content:center;gap:14px}
+.pin-dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--line)}
+.pin-dots i.on{background:var(--accent);border-color:var(--accent)}
+.pin-dots.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pin-err{text-align:center}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.key{font:inherit;font-size:22px;font-weight:600;padding:14px 0;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--text);cursor:pointer}
+.key:active{background:var(--soft)}
+.key.ghost{border:0;background:none;font-size:15px;color:var(--muted)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
 .clock{text-align:center;padding:26px 20px}
 .today{color:var(--muted);font-size:14px}
@@ -100,18 +117,33 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 </style>
 
 <main class="wrap">
-  <header class="top">
+  <!-- ───────── 로그인 화면 ───────── -->
+  <div id="view-login">
+    <div class="login-brand">BESY</div>
+    <p class="login-sub">근무기록</p>
+    <section class="card" id="pickBox">
+      <h2>누구세요?</h2>
+      <div class="pick">
+        <button class="pick-btn" data-role="employee"><span class="ico">👩‍💼</span><b>혜린 님</b><small>근무 기록하기</small></button>
+        <button class="pick-btn" data-role="admin"><span class="ico">🗂️</span><b>관리자</b><small>기록 확인하기</small></button>
+      </div>
+    </section>
+    <section class="card" id="pinBox" hidden>
+      <h2><span id="pinWho"></span><button class="link" id="pinBack">← 다시 선택</button></h2>
+      <p class="pin-help">비밀번호 4자리를 눌러주세요</p>
+      <div class="pin-dots" id="pinDots"><i></i><i></i><i></i><i></i></div>
+      <p class="err pin-err" id="pinErr"></p>
+      <div class="keypad" id="keypad"></div>
+    </section>
+  </div>
+
+  <header class="top" id="topBar" hidden>
     <div class="brand">BESY</div>
-    <div class="who"><span class="dot" id="dot"></span><b>혜린</b> 님</div>
+    <div class="who"><span class="dot" id="dot"></span><b id="whoName">혜린</b> 님<button class="link" id="btnLogout">로그아웃</button></div>
   </header>
 
-  <nav class="tabs" id="tabs" hidden>
-    <button class="tab on" data-tab="work">근무</button>
-    <button class="tab" data-tab="admin">관리자</button>
-  </nav>
-
   <!-- ───────── 근무 화면 ───────── -->
-  <div id="view-work">
+  <div id="view-work" hidden>
     <section class="card clock">
       <div class="today" id="today"></div>
       <div class="status" id="statusText">출근 전</div>
@@ -252,9 +284,7 @@ function dbErr(e) {
 
 // ───────── 서버(db) 연결 ─────────
 (async () => {
-  const [d, user] = await Promise.all([claude.use('db'), claude.use('user')]);
-  const isAdmin = user ? await user.canEdit().catch(() => false) : true;
-  if (isAdmin) $('tabs').hidden = false;
+  const d = await claude.use('db');
   if (!d) return;
   db = d;
   stateRef = db.doc('state/current');
@@ -418,13 +448,61 @@ $('endForm').onsubmit = async e => {
   render(); renderTodos(); renderMonthMini(); renderAdmin();
 };
 
-// ───────── 탭 ─────────
-document.querySelectorAll('.tab').forEach(b => b.onclick = () => {
-  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === b));
-  $('view-work').hidden = b.dataset.tab !== 'work';
-  $('view-admin').hidden = b.dataset.tab !== 'admin';
-  renderAdmin();
+// ───────── 로그인 ─────────
+// 비밀번호는 원문 대신 해시로만 보관 (간단한 화면 잠금용)
+const PIN_HASH = {
+  admin: '7dc8379e20146918d89f6458cdfee8a56342a71c501bf03dafdc2c00a6e7c41b',
+  employee: '7e4e376060748aa0a95e42b87e8c144274aa5b4c2c0a955b5d2c14700f317eca',
+};
+const ROLE_NAME = { admin: '관리자', employee: '혜린' };
+let pickRole = null, pin = '';
+async function sha256(s) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+function showRole(role) {
+  $('view-login').hidden = !!role;
+  $('topBar').hidden = !role;
+  $('view-work').hidden = role !== 'employee';
+  $('view-admin').hidden = role !== 'admin';
+  $('dot').hidden = role !== 'employee';
+  if (role) $('whoName').textContent = ROLE_NAME[role];
+  if (!role) { $('pickBox').hidden = false; $('pinBox').hidden = true; }
+  render(); renderAdmin();
+}
+function drawPin() { [...$('pinDots').children].forEach((d, i) => d.classList.toggle('on', i < pin.length)); }
+async function pressKey(k) {
+  if (k === 'del') pin = pin.slice(0, -1);
+  else if (pin.length < 4) pin += k;
+  $('pinErr').textContent = ''; drawPin();
+  if (pin.length === 4) {
+    const ok = (await sha256('besy-pin:' + pin)) === PIN_HASH[pickRole];
+    if (ok) { ls.set('besy.role', pickRole); pin = ''; drawPin(); showRole(pickRole); }
+    else {
+      $('pinErr').textContent = '비밀번호가 맞지 않아요.';
+      $('pinDots').classList.remove('shake'); void $('pinDots').offsetWidth; $('pinDots').classList.add('shake');
+      pin = ''; setTimeout(drawPin, 300);
+    }
+  }
+}
+['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k => {
+  const b = document.createElement('button'); b.type = 'button';
+  if (!k) { b.className = 'key ghost'; b.disabled = true; }
+  else { b.className = 'key' + (k === 'del' ? ' ghost' : ''); b.textContent = k === 'del' ? '지우기' : k; b.onclick = () => pressKey(k); }
+  $('keypad').append(b);
 });
+document.addEventListener('keydown', e => {
+  if ($('pinBox').hidden) return;
+  if (/^[0-9]$/.test(e.key)) pressKey(e.key);
+  else if (e.key === 'Backspace') pressKey('del');
+});
+document.querySelectorAll('.pick-btn').forEach(b => b.onclick = () => {
+  pickRole = b.dataset.role; pin = ''; drawPin(); $('pinErr').textContent = '';
+  $('pinWho').textContent = ROLE_NAME[pickRole] + (pickRole === 'employee' ? ' 님' : '');
+  $('pickBox').hidden = true; $('pinBox').hidden = false;
+});
+$('pinBack').onclick = () => { $('pickBox').hidden = false; $('pinBox').hidden = true; };
+$('btnLogout').onclick = () => { try { localStorage.removeItem('besy.role'); } catch {} showRole(null); };
 
 // ───────── 관리자 화면 ─────────
 function renderLive() {
@@ -519,6 +597,7 @@ $('btnSyncAll').onclick = async () => {
 };
 
 render(); renderTodos(); renderMonthMini();
+showRole(PIN_HASH[ls.get('besy.role', null)] ? ls.get('besy.role', null) : null);
 let lastMin = -1;
 setInterval(() => {
   render();
