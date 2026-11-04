@@ -1,0 +1,285 @@
+<title>BESY 근무기록</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--text:#17181c;--muted:#6b6f7a;--line:#e6e8ec;--accent:#2f5bea;--danger:#e5484d;--warn:#f5a524;--ok:#30a46c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111215;--card:#1b1d22;--text:#eceef2;--muted:#9196a1;--line:#2a2d34;--accent:#5b7cff;--danger:#f2555a}}
+:root[data-theme="dark"]{--bg:#111215;--card:#1b1d22;--text:#eceef2;--muted:#9196a1;--line:#2a2d34;--accent:#5b7cff;--danger:#f2555a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Noto Sans KR',system-ui,-apple-system,sans-serif}
+.wrap{max-width:480px;margin:0 auto;padding:24px 16px 48px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.brand{font-weight:700;font-size:22px;letter-spacing:.12em}
+.who{color:var(--muted);display:flex;align-items:center;gap:8px}
+.who b{color:var(--text);font-weight:600}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dot.working{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 22%,transparent)}
+.dot.paused{background:var(--warn)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;margin-bottom:16px}
+.clock{text-align:center;padding:28px 20px}
+.today{color:var(--muted);font-size:14px}
+.status{margin-top:14px;font-weight:600}
+.timer{font-size:52px;font-weight:700;font-variant-numeric:tabular-nums;margin:4px 0 12px}
+.meta{display:flex;justify-content:center;gap:28px;color:var(--muted);font-size:14px}
+.meta b{color:var(--text);margin-left:6px;font-weight:600;font-variant-numeric:tabular-nums}
+.buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:24px}
+.btn{font:inherit;font-weight:600;padding:14px 8px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--text);cursor:pointer}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.danger{background:var(--danger);border-color:var(--danger);color:#fff}
+.btn.resume{background:var(--warn);border-color:var(--warn);color:#1a1300}
+h2{font-size:15px;margin:0 0 12px}
+.history{list-style:none;margin:0;padding:0}
+.history li{padding:12px 0;border-top:1px solid var(--line);font-size:14px}
+.history li:first-child{border-top:0;padding-top:0}
+.row{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.d{font-weight:600}
+.t{color:var(--muted);font-variant-numeric:tabular-nums}
+.s{color:var(--muted);margin-top:4px;white-space:pre-line;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.tag{font-size:12px;margin-left:6px;font-weight:500}
+.tag a{color:var(--accent)}
+.tag.fail{color:var(--danger);background:none;border:0;padding:0;font:inherit;font-size:12px;text-decoration:underline;cursor:pointer}
+.empty{color:var(--muted)}
+.note{text-align:center;font-size:12px;color:var(--muted)}
+.overlay{position:fixed;inset:0;background:rgb(0 0 0/.45);display:none;align-items:center;justify-content:center;padding:16px;z-index:10}
+.overlay.open{display:flex}
+.dlg{background:var(--card);border-radius:16px;padding:22px;width:min(440px,100%)}
+.dlg h3{margin:0 0 6px;font-size:18px}
+.sum{color:var(--muted);font-size:14px;margin:0 0 16px}
+label{font-size:14px;font-weight:600;display:block;margin-bottom:6px}
+textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);resize:vertical}
+textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.err{color:var(--danger);font-size:13px;min-height:1em;margin:8px 0 0}
+.acts{display:grid;grid-template-columns:1fr 1.4fr;gap:10px;margin-top:12px}
+</style>
+
+<main class="wrap">
+  <header class="top">
+    <div class="brand">BESY</div>
+    <div class="who"><span class="dot" id="dot"></span><b>혜린</b> 님</div>
+  </header>
+
+  <section class="card clock">
+    <div class="today" id="today"></div>
+    <div class="status" id="statusText">출근 전</div>
+    <div class="timer" id="timer">00:00:00</div>
+    <div class="meta">
+      <div>출근<b id="startAt">--:--</b></div>
+      <div>휴식<b id="breakTime">0분</b></div>
+    </div>
+    <div class="buttons">
+      <button id="btnStart" class="btn primary">근무 시작</button>
+      <button id="btnPause" class="btn" disabled>일시정지</button>
+      <button id="btnEnd" class="btn danger" disabled>퇴근</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>최근 기록</h2>
+    <ul class="history" id="history"><li class="empty">아직 기록이 없어요.</li></ul>
+  </section>
+
+  <p class="note" id="note">퇴근 시 노션 「BESY 근무 기록」에 저장됩니다</p>
+</main>
+
+<div class="overlay" id="overlay">
+  <form class="dlg" id="endForm">
+    <h3>오늘도 수고했어요, 혜린 님 👏</h3>
+    <p class="sum" id="endSummary"></p>
+    <label for="summary">오늘 한 일</label>
+    <textarea id="summary" rows="7" placeholder="- 고객 문의 응대&#10;- 상세페이지 수정&#10;- 다음 주 일정 정리"></textarea>
+    <p class="err" id="endError"></p>
+    <div class="acts">
+      <button type="button" class="btn" id="btnCancel">계속 근무</button>
+      <button type="submit" class="btn primary" id="btnSave">저장하고 퇴근</button>
+    </div>
+  </form>
+</div>
+
+<script>
+const DATA_SOURCE = 'f69c00e4-f3c6-4181-a914-727f5ad53039'; // 노션 'BESY 근무 기록'
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+const hms = ms => { const s = Math.max(0, Math.floor(ms / 1000)); return `${pad(Math.floor(s / 3600))}:${pad(Math.floor(s / 60) % 60)}:${pad(s % 60)}`; };
+const hm = ts => { const d = new Date(ts); return `${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const dur = ms => { const m = Math.round(ms / 60000); return m >= 60 ? `${Math.floor(m / 60)}시간 ${m % 60}분` : `${m}분`; };
+const ymd = ts => { const d = new Date(ts); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+
+// ── 저장소: 로그인돼 있으면 계정(db)에, 아니면 이 브라우저에 ──
+let session = null;   // { start, pauses:[{from,to}] }
+let history = [];     // 최근 기록
+let sessionRef = null, historyRef = null;
+const ls = {
+  get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+};
+session = ls.get('besy.session', null);
+history = ls.get('besy.history', []);
+
+async function persist() {
+  ls.set('besy.session', session); ls.set('besy.history', history);
+  try {
+    if (sessionRef) await sessionRef.set({ value: session ? JSON.stringify(session) : '' });
+    if (historyRef) await historyRef.set({ value: JSON.stringify(history.slice(0, 30)) });
+  } catch {}
+}
+
+(async () => {
+  try {
+    const [db, user] = await Promise.all([claude.use('db'), claude.use('user')]);
+    const id = db && user ? await user.id() : null;
+    if (!id) return;
+    sessionRef = db.collection('data/users/' + id).doc('session');
+    historyRef = db.collection('data/users/' + id).doc('history');
+    const [s, h] = await Promise.all([sessionRef.get(), historyRef.get()]);
+    if (s.exists && s.data().value) session = JSON.parse(s.data().value);
+    else if (s.exists) session = null;
+    if (h.exists && h.data().value) history = JSON.parse(h.data().value);
+    else if (history.length) persist();
+    ls.set('besy.session', session); ls.set('besy.history', history);
+    render(); renderHistory();
+  } catch {}
+})();
+
+// ── 계산 ──
+const isPaused = () => !!(session && session.pauses.length && session.pauses.at(-1).to == null);
+const breakMs = (now = Date.now()) => session ? session.pauses.reduce((a, p) => a + ((p.to ?? now) - p.from), 0) : 0;
+const workMs = (now = Date.now()) => session ? now - session.start - breakMs(now) : 0;
+
+function render() {
+  $('today').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+  $('timer').textContent = hms(workMs());
+  $('startAt').textContent = session ? hm(session.start) : '--:--';
+  $('breakTime').textContent = dur(breakMs());
+  const st = !session ? 'idle' : isPaused() ? 'paused' : 'working';
+  $('statusText').textContent = { idle: '출근 전', working: '근무 중', paused: '일시정지 중' }[st];
+  $('dot').className = 'dot ' + st;
+  $('btnStart').disabled = st !== 'idle';
+  $('btnPause').disabled = st === 'idle';
+  $('btnEnd').disabled = st === 'idle';
+  $('btnPause').textContent = st === 'paused' ? '근무 재개' : '일시정지';
+  $('btnPause').classList.toggle('resume', st === 'paused');
+}
+
+function renderHistory() {
+  const ul = $('history');
+  ul.replaceChildren();
+  if (!history.length) { ul.innerHTML = '<li class="empty">아직 기록이 없어요.</li>'; return; }
+  history.slice(0, 10).forEach((r, i) => {
+    const li = document.createElement('li');
+    const row = document.createElement('div'); row.className = 'row';
+    const d = document.createElement('span'); d.className = 'd'; d.textContent = r.date;
+    if (r.notionUrl) {
+      const a = document.createElement('a'); a.href = r.notionUrl; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '노션 ↗';
+      const tag = document.createElement('span'); tag.className = 'tag'; tag.append(a); d.append(tag);
+    } else if (r.notionSaved) {
+      const tag = document.createElement('span'); tag.className = 'tag'; tag.textContent = '노션 저장됨'; d.append(tag);
+    } else {
+      const b = document.createElement('button'); b.className = 'tag fail'; b.textContent = '노션 저장 안 됨 · 다시 시도';
+      b.onclick = () => retry(i, b); d.append(b);
+    }
+    const t = document.createElement('span'); t.className = 't'; t.textContent = `${r.startText}–${r.endText} · ${r.workText}`;
+    row.append(d, t);
+    const s = document.createElement('div'); s.className = 's'; s.textContent = r.summary;
+    li.append(row, s); ul.append(li);
+  });
+}
+
+// ── 노션 저장 ──
+function errorText(e) {
+  switch (e && e.code) {
+    case 'server_not_connected': return 'claude.ai 설정 → 커넥터에서 Notion을 연결해 주세요.';
+    case 'needs_reauth': return 'claude.ai 설정 → 커넥터에서 Notion을 다시 연결해 주세요.';
+    case 'not_in_manifest': case 'approval_required': case 'consent_required': return '노션 사용 허락이 필요해요. 다시 시도하면 허락 창이 떠요.';
+    case 'selection_required': return '연결된 Notion이 여러 개예요. 화면에 뜨는 선택 창에서 하나를 골라주세요.';
+    case 'server_unavailable': case 'upstream_error': return '노션 응답이 늦어요. 노션에 저장됐는지 확인한 뒤, 안 됐으면 다시 시도해 주세요.';
+    case 'tool_error': return '노션이 저장을 거절했어요: ' + (e.message || '').slice(0, 120);
+    default: return '이 화면에서는 노션에 연결할 수 없어요. claude.ai에서 열어주세요.';
+  }
+}
+
+async function sendToNotion(r) {
+  const mcp = await claude.use('mcp');
+  if (!mcp) throw { code: 'not_granted' };
+  const bullets = r.summary.split('\n').map(l => l.trim()).filter(Boolean).map(l => '- ' + l.replace(/^[-*•]\s*/, '')).join('\n');
+  const res = await mcp.callTool('Notion', 'notion-create-pages', {
+    parent: { data_source_id: DATA_SOURCE },
+    pages: [{
+      icon: '🕒',
+      properties: {
+        '이름': `${r.employee} · ${r.date}`,
+        'date:날짜:start': r.date,
+        'date:날짜:is_datetime': 0,
+        '직원': r.employee,
+        '회사': r.company,
+        '출근': r.startText,
+        '퇴근': r.endText,
+        '근무시간(분)': r.workMinutes,
+        '휴식시간(분)': r.breakMinutes,
+        '오늘 한 일': r.summary.slice(0, 1900),
+      },
+      content: `## 근무 요약\n출근 ${r.startText} · 퇴근 ${r.endText} · 실근무 ${r.workText} · 휴식 ${r.breakText}\n\n## 오늘 한 일\n${bullets}`,
+    }],
+  });
+  const text = JSON.stringify(res.payload ?? res.content ?? '');
+  const m = text.match(/https:\/\/(?:www\.|app\.)?notion\.(?:so|com)\/[^\s"'\\<>)}\]]+/);
+  return m ? m[0] : null;
+}
+
+async function retry(i, btn) {
+  btn.disabled = true; btn.textContent = '저장 중…';
+  try {
+    history[i].notionUrl = await sendToNotion(history[i]);
+    history[i].notionSaved = true;
+    await persist();
+  } catch (e) { $('note').textContent = '⚠️ ' + errorText(e); }
+  renderHistory();
+}
+
+// ── 버튼 ──
+$('btnStart').onclick = () => { session = { start: Date.now(), pauses: [] }; persist(); render(); };
+$('btnPause').onclick = () => {
+  if (isPaused()) session.pauses.at(-1).to = Date.now();
+  else session.pauses.push({ from: Date.now(), to: null });
+  persist(); render();
+};
+$('btnEnd').onclick = () => {
+  const now = Date.now();
+  $('endSummary').textContent = `출근 ${hm(session.start)} · 지금 ${hm(now)} · 실근무 ${dur(workMs(now))} · 휴식 ${dur(breakMs(now))}`;
+  $('endError').textContent = '';
+  $('overlay').classList.add('open');
+  $('summary').focus();
+};
+$('btnCancel').onclick = () => $('overlay').classList.remove('open');
+
+$('endForm').onsubmit = async e => {
+  e.preventDefault();
+  const text = $('summary').value.trim();
+  if (!text) { $('endError').textContent = '오늘 한 일을 적어주세요.'; return; }
+  const now = Date.now();
+  if (isPaused()) session.pauses.at(-1).to = now;
+  const r = {
+    company: 'BESY', employee: '혜린', date: ymd(session.start),
+    startText: hm(session.start), endText: hm(now),
+    workMinutes: Math.round(workMs(now) / 60000), breakMinutes: Math.round(breakMs(now) / 60000),
+    workText: dur(workMs(now)), breakText: dur(breakMs(now)), summary: text,
+  };
+  $('btnSave').disabled = true; $('btnSave').textContent = '노션에 저장 중…';
+  let failed = null;
+  try { r.notionUrl = await sendToNotion(r); r.notionSaved = true; }
+  catch (err) { failed = err; }
+  history.unshift(r); session = null;
+  await persist();
+  $('btnSave').disabled = false; $('btnSave').textContent = '저장하고 퇴근';
+  if (failed) {
+    $('endError').textContent = errorText(failed) + ' (기록은 남아 있어요)';
+    await new Promise(res => setTimeout(res, 2500));
+  }
+  $('summary').value = '';
+  $('overlay').classList.remove('open');
+  $('note').textContent = failed ? '⚠️ 노션 저장이 안 된 기록이 있어요. 목록에서 다시 시도해 주세요.' : '✅ 노션에 저장됐어요. 오늘도 수고 많았어요!';
+  render(); renderHistory();
+};
+
+render(); renderHistory();
+setInterval(render, 1000);
+</script>
