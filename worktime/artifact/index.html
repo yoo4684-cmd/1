@@ -490,12 +490,6 @@ function renderDetail() {
     div.innerHTML = `<div class="kv"><div>출근<b></b></div><div>퇴근<b></b></div><div>실근무<b></b></div></div>`;
     const bs = div.querySelectorAll('b'); bs[0].textContent = r.startText; bs[1].textContent = r.endText; bs[2].textContent = durM(r.workMinutes || 0);
     const sub = document.createElement('div'); sub.className = 'empty'; sub.textContent = `휴식 ${durM(r.breakMinutes || 0)}`; div.append(sub);
-    if (r.todos && r.todos.length) {
-      const l = document.createElement('div'); l.className = 'lbl'; l.textContent = `오늘 할 일 (${r.todos.filter(t => t.done).length}/${r.todos.length})`;
-      const ul = document.createElement('ul'); ul.className = 'tlist';
-      r.todos.forEach(t => { const li = document.createElement('li'); li.className = t.done ? '' : 'no'; li.textContent = (t.done ? '✅ ' : '⬜ ') + t.text; ul.append(li); });
-      div.append(l, ul);
-    }
     const l2 = document.createElement('div'); l2.className = 'lbl'; l2.textContent = '오늘 한 일';
     const tx = document.createElement('div'); tx.className = 'txt'; tx.textContent = r.summary || '-';
     div.append(l2, tx);
