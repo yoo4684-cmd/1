@@ -176,11 +176,44 @@ async function monthRecords(k, month) {
         startText: plain(p['출근']), endText: plain(p['퇴근']),
         workMinutes: p['근무시간(분)']?.number || 0, breakMinutes: p['휴식시간(분)']?.number || 0,
         summary: plain(p['오늘 한 일']),
+        edited: !!p['수정됨']?.checkbox, editLog: plain(p['수정 기록']),
       });
     }
     cursor = q.has_more ? q.next_cursor : undefined;
   } while (cursor);
   return out;
+}
+
+// 기록 고치기: "HH:MM" 두 개와 휴식(분)으로 실근무 다시 계산
+const toMin = t => { const m = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(String(t || '')); return m ? +m[1] * 60 + +m[2] : null; };
+async function editRecord(me, isAdmin, id, b) {
+  const pg = await notion('GET', `pages/${id}`);
+  const p = pg.properties;
+  const owner = p['직원']?.select?.name;
+  if (!pg.parent || pg.parent.database_id?.replace(/-/g, '') !== RECORDS_DB.replace(/-/g, '')) throw Object.assign(new Error('잘못된 기록이에요.'), { status: 400 });
+  if (owner !== PEOPLE[me].name && !isAdmin) throw Object.assign(new Error('내 기록만 고칠 수 있어요.'), { status: 403 });
+  const s = toMin(b.startText), e = toMin(b.endText);
+  if (s == null || e == null) throw Object.assign(new Error('출근·퇴근 시각을 확인해 주세요.'), { status: 400 });
+  const span = e > s ? e - s : e + 1440 - s; // 퇴근이 출근보다 이르면 다음 날 퇴근으로 봐요
+  const brk = Math.max(0, Math.round(Number(b.breakMinutes) || 0));
+  if (brk >= span) throw Object.assign(new Error('휴식 시간이 근무 시간보다 길어요.'), { status: 400 });
+  const work = span - brk;
+  const summary = String(b.summary ?? plain(p['오늘 한 일'])).trim().slice(0, 1900);
+  const before = `${plain(p['출근'])}–${plain(p['퇴근'])} 휴식 ${p['휴식시간(분)']?.number || 0}분`;
+  const after = `${b.startText}–${b.endText} 휴식 ${brk}분`;
+  const stamp = (() => { const d = kst(Date.now()); return `${d.getUTCMonth() + 1}/${d.getUTCDate()} ${hm(Date.now())}`; })();
+  const changedTime = before !== after;
+  const log = [plain(p['수정 기록']), `${stamp} ${PEOPLE[me].name} 수정: ${changedTime ? `${before} → ${after}` : '한 일만 수정'}`].filter(Boolean).join('\n').slice(-1900);
+  await notion('PATCH', `pages/${id}`, { properties: {
+    '출근': { rich_text: rt(b.startText) }, '퇴근': { rich_text: rt(b.endText) },
+    '근무시간(분)': { number: work }, '휴식시간(분)': { number: brk },
+    '오늘 한 일': { rich_text: rt(summary) },
+    '수정됨': { checkbox: true }, '수정 기록': { rich_text: rt(log) },
+  } });
+  await notion('PATCH', `blocks/${id}/children`, { children: [
+    { object: 'block', type: 'callout', callout: { icon: { type: 'emoji', emoji: '✏️' }, rich_text: rt(`${stamp} 수정 → 출근 ${b.startText} · 퇴근 ${b.endText} · 실근무 ${durM(work)} · 휴식 ${durM(brk)}${summary !== plain(p['오늘 한 일']) ? '\n오늘 한 일: ' + summary : ''}`) } },
+  ] }).catch(() => {});
+  return { id, startText: b.startText, endText: b.endText, workMinutes: work, breakMinutes: brk, summary, edited: true, editLog: log };
 }
 
 // PIN 틀림 횟수 제한 (5번 틀리면 5분 잠금)
@@ -245,6 +278,11 @@ async function api(req, res, url) {
     if (!PEOPLE[who] || !/^\d{4}-\d{2}$/.test(month)) return send(res, 400, { error: '잘못된 요청이에요.' });
     if (who !== me && !isAdmin) return send(res, 403, { error: '볼 수 없어요.' });
     return send(res, 200, { records: await monthRecords(who, month) });
+  }
+
+  const em = url.pathname.match(/^\/api\/records\/([0-9a-f-]{32,36})$/);
+  if (em && req.method === 'PATCH') {
+    return send(res, 200, { record: await editRecord(me, isAdmin, em[1], await readBody(req)) });
   }
 
   if (url.pathname === '/api/states' && req.method === 'GET') {

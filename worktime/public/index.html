@@ -158,6 +158,25 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
 .loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:20;color:var(--muted);font-size:14px;text-align:center;padding:16px}
 .spin{width:28px;height:28px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--accent);animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
+.mini-nav{display:flex;align-items:center;gap:6px;font-weight:600;font-size:14px}
+.mini-nav button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:8px;width:28px;height:28px;cursor:pointer}
+.myrecs{list-style:none;margin:0;padding:0}
+.myrecs li{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.myrecs li:first-child{border-top:0;padding-top:0}
+.myrecs .d{font-weight:600;min-width:62px}
+.myrecs .t{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.myrecs .t b{color:var(--text);font-weight:600}
+.badge{display:inline-block;font-size:11px;font-weight:600;color:var(--warn);border:1px solid currentColor;border-radius:6px;padding:0 5px;margin-left:6px;vertical-align:1px}
+.edit-btn{font:inherit;font-size:13px;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--text);cursor:pointer;white-space:nowrap}
+.hint{font-size:12px;color:var(--muted);margin:10px 0 0}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.fields .full{grid-column:1/-1}
+.fields label{font-size:13px;margin-bottom:4px}
+.fields input{width:100%;font:inherit;font-size:16px;padding:10px 8px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text);font-variant-numeric:tabular-nums}
+.fields input:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.calc{background:var(--soft);border-radius:10px;padding:10px 12px;font-size:14px;margin-bottom:12px}
+.calc b{font-variant-numeric:tabular-nums}
+.editlog{font-size:12px;color:var(--muted);white-space:pre-line;margin-top:6px}
 </style>
 </head>
 <body>
@@ -226,6 +245,12 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
       </div>
     </section>
 
+    <section class="card">
+      <h2>내 기록 <span class="mini-nav"><button id="myPrev" aria-label="이전 달">‹</button><span id="myMLabel"></span><button id="myNext" aria-label="다음 달">›</button></span></h2>
+      <ul class="myrecs" id="myRecs"></ul>
+      <p class="hint">시간을 잘못 눌렀다면 <b>✏️ 수정</b>을 눌러 출근·퇴근 시각과 휴식을 고칠 수 있어요. 고친 기록에는 '수정됨' 표시가 남아요.</p>
+    </section>
+
     <p class="note" id="note">퇴근하면 노션 「BESY 근무 기록」에 저장돼요</p>
   </div>
 
@@ -292,6 +317,25 @@ textarea{width:100%;font:inherit;font-size:15px;padding:12px;border-radius:10px;
   </form>
 </div>
 
+<div class="overlay" id="editOverlay">
+  <form class="dlg" id="editForm">
+    <h3>기록 고치기</h3>
+    <p class="sum" id="editDate"></p>
+    <div class="fields">
+      <div><label for="eStart">출근</label><input type="time" id="eStart" required></div>
+      <div><label for="eEnd">퇴근</label><input type="time" id="eEnd" required></div>
+      <div class="full"><label for="eBreak">휴식 시간 (분)</label><input type="number" id="eBreak" min="0" max="1440" step="1" inputmode="numeric"></div>
+    </div>
+    <div class="calc" id="eCalc"></div>
+    <label for="eSummary">오늘 한 일</label>
+    <textarea id="eSummary" rows="5"></textarea>
+    <p class="err" id="editError"></p>
+    <div class="acts">
+      <button type="button" class="btn" id="editCancel">취소</button>
+      <button type="submit" class="btn primary" id="editSave">저장</button>
+    </div>
+  </form>
+</div>
 <script src="app.js"></script>
 </body>
 </html>

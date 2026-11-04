@@ -149,6 +149,76 @@ function renderMonthMini() {
   $('myMonthDays').textContent = `${Object.keys(byDay(list)).length}일 근무`;
 }
 
+// ───────── 내 기록 / 고치기 ─────────
+let myY = now0.getFullYear(), myM = now0.getMonth();
+function renderMyRecs() {
+  if (!me) return;
+  $('myMLabel').textContent = `${myM + 1}월`;
+  const ul = $('myRecs'); ul.replaceChildren();
+  const list = cached(me, myY, myM);
+  if (!list) {
+    const li = document.createElement('li'); li.className = 'empty'; li.textContent = '불러오는 중…'; ul.append(li);
+    loadRecords(me, myY, myM).then(renderMyRecs).catch(e => { li.textContent = '⚠️ ' + e.message; });
+    return;
+  }
+  if (!list.length) { const li = document.createElement('li'); li.className = 'empty'; li.textContent = '이 달에는 기록이 없어요.'; ul.append(li); return; }
+  [...list].reverse().forEach(r => {
+    const li = document.createElement('li');
+    const d = document.createElement('span'); d.className = 'd';
+    const [, mm, dd] = r.date.split('-'); const wd = '일월화수목금토'[new Date(r.date + 'T00:00').getDay()];
+    d.textContent = `${+mm}/${+dd} (${wd})`;
+    const t = document.createElement('span'); t.className = 't';
+    t.append(`${r.startText}–${r.endText} · `); const b = document.createElement('b'); b.textContent = durM(r.workMinutes); t.append(b);
+    if (r.edited) { const g = document.createElement('span'); g.className = 'badge'; g.textContent = '수정됨'; t.append(g); }
+    const e = document.createElement('button'); e.className = 'edit-btn'; e.textContent = '✏️ 수정'; e.onclick = () => openEdit(r, me);
+    li.append(d, t, e); ul.append(li);
+  });
+}
+$('myPrev').onclick = () => { myM--; if (myM < 0) { myM = 11; myY--; } renderMyRecs(); };
+$('myNext').onclick = () => { myM++; if (myM > 11) { myM = 0; myY++; } renderMyRecs(); };
+
+let editing = null;
+const tMin = v => { const m = /^(\d{1,2}):(\d{2})/.exec(v || ''); return m ? +m[1] * 60 + +m[2] : null; };
+function editCalc() {
+  const s = tMin($('eStart').value), e = tMin($('eEnd').value), brk = Math.max(0, +$('eBreak').value || 0);
+  if (s == null || e == null) { $('eCalc').textContent = '출근·퇴근 시각을 넣어주세요.'; return null; }
+  const span = e > s ? e - s : e + 1440 - s, work = span - brk;
+  $('eCalc').replaceChildren(`실근무 `, Object.assign(document.createElement('b'), { textContent: work > 0 ? hmK(work) : '-' }),
+    e <= s ? ' (다음 날 퇴근으로 계산)' : '', work <= 0 ? ' — 휴식이 너무 길어요' : '');
+  return work;
+}
+['eStart', 'eEnd', 'eBreak'].forEach(id => $(id).addEventListener('input', editCalc));
+function openEdit(r, owner) {
+  editing = { r, owner };
+  const [, mm, dd] = r.date.split('-');
+  $('editDate').textContent = `${NAMES[owner]} 님 · ${+mm}월 ${+dd}일 기록`;
+  $('eStart').value = r.startText; $('eEnd').value = r.endText; $('eBreak').value = r.breakMinutes;
+  $('eSummary').value = r.summary || '';
+  $('editError').textContent = '';
+  editCalc();
+  $('editOverlay').classList.add('open');
+}
+$('editCancel').onclick = () => $('editOverlay').classList.remove('open');
+$('editForm').onsubmit = async e => {
+  e.preventDefault();
+  const work = editCalc();
+  if (!work || work <= 0) { $('editError').textContent = '시간을 다시 확인해 주세요.'; return; }
+  $('editSave').disabled = true; $('editSave').textContent = '저장 중…';
+  try {
+    const { r, owner } = editing;
+    const d = await api('/api/records/' + r.id, { method: 'PATCH', body: {
+      startText: $('eStart').value.slice(0, 5), endText: $('eEnd').value.slice(0, 5),
+      breakMinutes: Math.max(0, +$('eBreak').value || 0), summary: $('eSummary').value,
+    } });
+    Object.assign(r, d.record);
+    Object.keys(recCache).forEach(k => { if (k.startsWith(owner + '|')) delete recCache[k]; });
+    $('editOverlay').classList.remove('open');
+    note('✅ 기록을 고쳤어요. 노션에도 반영됐어요.');
+    renderAll();
+  } catch (err) { $('editError').textContent = '저장하지 못했어요: ' + err.message; }
+  finally { $('editSave').disabled = false; $('editSave').textContent = '저장'; }
+};
+
 // ───────── 버튼 ─────────
 $('btnStart').onclick = () => { myState.session = { start: Date.now(), pauses: [] }; saveState(); render(); };
 $('btnPause').onclick = () => {
@@ -303,15 +373,17 @@ function renderDetail(recs) {
     const div = document.createElement('div'); div.className = 'rec';
     div.innerHTML = `<div class="kv"><div>출근<b></b></div><div>퇴근<b></b></div><div>실근무<b></b></div></div>`;
     const bs = div.querySelectorAll('b'); bs[0].textContent = r.startText; bs[1].textContent = r.endText; bs[2].textContent = durM(r.workMinutes);
-    const sub = document.createElement('div'); sub.className = 'empty'; sub.textContent = `휴식 ${durM(r.breakMinutes)}`; div.append(sub);
+    const sub = document.createElement('div'); sub.className = 'empty'; sub.textContent = `휴식 ${durM(r.breakMinutes)}`;
+    if (r.edited) { const g = document.createElement('span'); g.className = 'badge'; g.textContent = '✏️ 수정됨'; sub.append(g); }
+    div.append(sub);
+    if (r.editLog) { const lg = document.createElement('div'); lg.className = 'editlog'; lg.textContent = r.editLog; div.append(lg); }
     const l2 = document.createElement('div'); l2.className = 'lbl'; l2.textContent = '오늘 한 일';
     const tx = document.createElement('div'); tx.className = 'txt'; tx.textContent = r.summary || '-';
     div.append(l2, tx);
-    if (r.url) {
-      const nl = document.createElement('div'); nl.className = 'nlink';
-      const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '노션에서 보기 ↗';
-      nl.append(a); div.append(nl);
-    }
+    const nl = document.createElement('div'); nl.className = 'nlink';
+    const eb = document.createElement('button'); eb.className = 'edit-btn'; eb.textContent = '✏️ 수정'; eb.onclick = () => openEdit(r, adminWho); nl.append(eb);
+    if (r.url) { const a = document.createElement('a'); a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '노션에서 보기 ↗'; nl.append(a); }
+    div.append(nl);
     box.append(div);
   });
 }
@@ -396,7 +468,7 @@ document.querySelectorAll('.pick-btn').forEach(b => b.onclick = () => {
 $('pinBack').onclick = () => { $('pickBox').hidden = false; $('pinBox').hidden = true; };
 $('btnLogout').onclick = logout;
 
-function renderAll() { render(); renderTodos(); renderMonthMini(); renderAdmin(); }
+function renderAll() { render(); renderTodos(); renderMonthMini(); renderMyRecs(); renderAdmin(); }
 
 // 다른 기기에서 바꾼 내용 불러오기 (화면으로 돌아왔을 때)
 document.addEventListener('visibilitychange', async () => {
